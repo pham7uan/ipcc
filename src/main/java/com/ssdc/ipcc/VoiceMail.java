@@ -3,7 +3,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "log_voice_mail")
-public class VoidMail {
+public class VoiceMail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -18,10 +18,10 @@ public class VoidMail {
     private String agent_seen_time;
     private String agent_note;
     private String path_file_record;
-    public VoidMail() {
+    public VoiceMail() {
     }
 
-    public VoidMail(String customer_name, String customer_type, String customer_phone,
+    public VoiceMail(String customer_name, String customer_type, String customer_phone,
                     String date_record,String  branch_call, String status_agent_seen,
                     int agent_seen_id,String agent_seen_name,String agent_seen_time,
                     String agent_note, String path_file_record) {
