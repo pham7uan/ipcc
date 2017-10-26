@@ -1,11 +1,16 @@
 package com.ssdc.ipcc;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/api/voicemail") // This means URL's start with /demo (after Application path)
@@ -28,9 +33,31 @@ public class MainController {
     }
 
     @GetMapping(path="/all")
-    public @ResponseBody
-    Iterable<VoiceMail> getAllVoidMail() {
-        // This returns a JSON or XML with the users
-        return voiceMailRepository.findAll();
+    @ResponseBody
+    public List<VoiceMail> search(@RequestParam(value = "search") String search) {
+//        System.out.println(search);
+        SpecificationsBuilder builder = new SpecificationsBuilder();
+//        Pattern pattern = Pattern.compile(" (\\w+?)(:|<|>)(a-zA-Z0-9\\-)*,");
+//        Matcher matcher = pattern.matcher(search + ",");
+        if (search.length() >0){
+            search = search+",";
+            String[] params = search.split(",");
+            for (int i=0; i< params.length; i++){
+                System.out.println(params[i]);
+                if (params[i].contains(">")){
+                    String[] parts = params[i].split(">");
+                    builder.with(parts[0], ">", parts[1]);
+                } else if (params[i].contains("<")){
+                    String[] parts = params[i].split("<");
+                    builder.with(parts[0], "<", parts[1]);
+                } else if (params[i].contains(":")){
+                    String[] parts = params[i].split(":");
+                    builder.with(parts[0], ":", parts[1]);
+                }
+            }
+
+        }
+        Specification<VoiceMail> spec = builder.build();
+        return voiceMailRepository.findAll(spec);
     }
 }
