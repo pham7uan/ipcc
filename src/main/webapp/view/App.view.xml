@@ -5,12 +5,12 @@
 	displayBlock="true">
 	<App class="myAppDemoWT">
 		<pages>
-			<Page title="IPCC">
+			<Page title="IPCC" enableScrolling="false" class="sapUiContentPadding">
 				<headerContent>
 
 				</headerContent>
 				<content>
-
+					<mvc:XMLView viewName="sap.ui.ipcc.wt.view.VoiceTable"/>
 				</content>
 			</Page>
 		</pages>

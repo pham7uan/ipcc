@@ -40,6 +40,10 @@
 				"settings": {
 					"bundleName": "sap.ui.ipcc.wt.i18n.i18n"
 				}
+			},
+			"voice": {
+				"type": "sap.ui.model.json.JSONModel",
+				"uri": "http://localhost:8080/api/voicemail/all?search"
 			}
 		},
 		"resources": {

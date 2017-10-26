@@ -1,0 +1,153 @@
+<mvc:View
+        controllerName="sap.ui.ipcc.wt.controller.VoiceTable"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns="sap.ui.table"
+        xmlns:mvc="sap.ui.core.mvc"
+        xmlns:u="sap.ui.unified"
+        xmlns:c="sap.ui.core"
+        xmlns:m="sap.m">
+    <!--<List id="voiceList"
+          mode="SingleSelectMaster"
+          width="auto"
+          items="{voice>/}">
+        <headerToolbar>
+            <Toolbar>
+                <Title text="{i18n>voiceListTitle}"/>
+                <ToolbarSpacer/>
+                <SearchField width="50%" search="onFilterVoices" selectOnFocus="false"/>
+            </Toolbar>
+        </headerToolbar>
+        <CustomListItem>
+            <HBox>
+                <core:Icon size="2rem" src="sap-icon://record"
+                           class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom"/>
+                <VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom">
+                    <Link text="{voice>customer_name}"
+                          target="_blank"
+                          href="http://10.2.8.58:8181/voice_mail/{voice>path_file_record}"/>
+                    <Label text="{voice>customer_phone}"/>
+                </VBox>
+
+            </HBox>
+            &lt;!&ndash;<html:audio controls="controls">
+                <html:source src="http://10.2.8.58:8181/voice_mail/{voice>path_file_record}" type="audio/wav"/>
+                Your browser does not support the audio element.
+            </html:audio>&ndash;&gt;
+        </CustomListItem>
+    </List>-->
+    <m:Toolbar>
+        <m:Title text="{i18n>voiceListTitle}"/>
+        <m:ToolbarSpacer/>
+        <m:ToggleButton
+                icon="sap-icon://complete"
+                tooltip="Show seen voice mail only"
+                press="toggleAvailabilityFilter"
+                pressed="{ui>/availabilityFilterOn}"/>
+        <!--<m:ToggleButton
+                icon="sap-icon://grid"
+                tooltip="Enable / Disable Cell Filter Functionality"
+                pressed="{ui>/cellFilterOn}"/>-->
+        <m:Button
+                icon="sap-icon://decline"
+                tooltip="Clear all filters"
+                press="clearAllFilters"/>
+        <m:ToolbarSeparator/>
+        <m:SearchField value="{ui>/globalFilter}" width="15rem" search="filterGlobally" selectOnFocus="false"/>
+    </m:Toolbar>
+
+    <Table id="table"
+           selectionMode="None"
+           enableCellFilter="{ui>/cellFilterOn}"
+           filter="filterGlobally"
+           inset="false"
+           ariaLabelledBy="title"
+           rows="{
+			path: 'voice>/'
+		}">
+
+        <columns>
+            <Column
+                    hAlign="Center"
+                    width="5em"
+                    demandPopin="true">
+                <m:Label text="Id"/>
+                <template>
+                    <m:Text text="{voice>id}" wrapping="false"/>
+                </template>
+            </Column>
+            <Column
+                    filterProperty="customer_name"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Customer Name"/>
+                <template>
+                    <m:Link text="{voice>customer_name}"
+                            target="_blank"
+                            href="http://10.2.8.58:8181/voice_mail/{voice>path_file_record}"/>
+                </template>
+            </Column>
+            <Column
+                    filterProperty="customer_type"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Customer Type"/>
+                <template>
+                    <m:Text text="{voice>customer_type}" wrapping="false"/>
+                </template>
+            </Column>
+            <Column
+                    id="phone"
+                    filterProperty="customer_phone"
+                    hAlign="Center"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Customer Phone"/>
+                <template>
+                    <m:Text text="{voice>customer_phone}" wrapping="false"/>
+                </template>
+            </Column>
+            <Column
+                    filterProperty="date_record"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Date Record"/>
+                <template>
+                    <m:Text text="{voice>date_record}" wrapping="false"/>
+                </template>
+            </Column>
+            <Column
+                    filterProperty="branch_call"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Brand Call"/>
+                <template>
+                    <m:Text text="{voice>branch_call}" wrapping="false"/>
+                </template>
+            </Column>
+            <Column
+                    id="availability"
+                    showFilterMenuEntry="false"
+                    defaultFilterOperator="EQ"
+                    filterType="sap.ui.model.type.Boolean"
+                    filterProperty="status_agent_seen"
+                    hAlign="Center"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Seen"/>
+                <template>
+                    <!--<m:Text text="{voice>status_agent_seen}" wrapping="false"/>-->
+                    <m:CheckBox editable="false" selected="{= ${voice>status_agent_seen} !== '0' }"/>
+                </template>
+            </Column>
+            <Column
+                    filterProperty="Note"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Note"/>
+                <template>
+                    <m:Text text="{voice>agent_note}" wrapping="false"/>
+                </template>
+            </Column>
+        </columns>
+    </Table>
+</mvc:View>
