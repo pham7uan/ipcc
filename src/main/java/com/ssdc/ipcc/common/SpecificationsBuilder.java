@@ -1,5 +1,6 @@
-package com.ssdc.ipcc;
+package com.ssdc.ipcc.common;
 
+import com.ssdc.ipcc.entities.VoiceMail;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 

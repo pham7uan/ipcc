@@ -1,5 +1,9 @@
 package com.ssdc.ipcc;
 
+import com.ssdc.ipcc.common.SpecificationsBuilder;
+import com.ssdc.ipcc.common.Util;
+import com.ssdc.ipcc.entities.VoiceMail;
+import com.ssdc.ipcc.entities.VoiceMailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
@@ -8,13 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/api/voicemail") // This means URL's start with /demo (after Application path)
@@ -31,10 +29,7 @@ public class MainController {
         Specification<VoiceMail> spec = builder.build();
         VoiceMail voiceMail = voiceMailRepository.findOne(spec);
         voiceMail.setStatus_agent_seen("1");
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Saigon"));
-        Date date = new Date();
-        voiceMail.setAgent_seen_time(dateFormat.format(date));
+        voiceMail.setAgent_seen_time(Util.getCurrentDateTime());
         voiceMailRepository.save(voiceMail);
         return "Updated";
     }

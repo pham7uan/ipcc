@@ -1,4 +1,4 @@
-package com.ssdc.ipcc;
+package com.ssdc.ipcc.common;
 
 public class SearchCriteria {
 
