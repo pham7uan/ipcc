@@ -1,6 +1,7 @@
 <mvc:View
         controllerName="sap.ui.ipcc.wt.controller.VoiceTable"
         xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
         xmlns="sap.ui.table"
         xmlns:mvc="sap.ui.core.mvc"
         xmlns:u="sap.ui.unified"
@@ -39,6 +40,7 @@
         <m:Title text="{i18n>voiceListTitle}"/>
         <m:ToolbarSpacer/>
         <m:ToggleButton
+                text="Seen"
                 icon="sap-icon://complete"
                 tooltip="Show seen voice mail only"
                 press="toggleAvailabilityFilter"
@@ -49,20 +51,23 @@
                 pressed="{ui>/cellFilterOn}"/>-->
         <m:Button
                 icon="sap-icon://decline"
-                tooltip="Clear all filters"
+                tooltip="Clear all filters and sortings"
                 press="clearAllFilters"/>
         <m:ToolbarSeparator/>
-        <m:SearchField value="{ui>/globalFilter}" width="15rem" search="filterGlobally" selectOnFocus="false"/>
+        <m:SearchField placeholder="Search customer's name, type, phone..." value="{ui>/globalFilter}" width="22rem"
+                       search="filterGlobally" selectOnFocus="false"/>
     </m:Toolbar>
 
     <m:Toolbar>
         <m:ToolbarSpacer/>
         <m:CheckBox text="{i18n>dateFindTitle}" select="showFindDate" width="15rem"/>
         <m:Text text="From"/>
-        <m:DatePicker id="dateFrom" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem" dateValue="{dateModel>/dateStart}"/>
+        <m:DatePicker id="dateFrom" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem"
+                      dateValue="{dateModel>/dateStart}"/>
         <m:Text text=""/>
         <m:Text text="To"/>
-        <m:DatePicker id="dateTo" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem" dateValue="{dateModel>/dateEnd}"/>
+        <m:DatePicker id="dateTo" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem"
+                      dateValue="{dateModel>/dateEnd}"/>
         <m:Button
                 enabled="{dateModel>/dateFind}"
                 icon="sap-icon://search"
@@ -91,17 +96,31 @@
                 </template>
             </Column>
             <Column
+                    hAlign="Center"
+                    width="5em"
+                    demandPopin="true">
+                <m:Label text="Record"/>
+                <template>
+                    <m:Button icon="sap-icon://media-play" app:mydata="{id}" app:mydataName="{customer_name}" app:mydataDate="{date_record}" app:mydataLink="http://10.2.8.58:8181/voice_mail/{path_file_record}" press="clickLink"/>
+                    <!--<m:Link text="Play"
+                            target="_blank"
+                            app:mydata="{id}" press="clickLink"
+                            href="http://10.2.8.58:8181/voice_mail/{path_file_record}"/>-->
+
+                </template>
+            </Column>
+            <Column
+                    sortProperty="customer_name"
                     filterProperty="customer_name"
                     minScreenWidth="Tablet"
                     demandPopin="true">
                 <m:Label text="Customer Name"/>
                 <template>
-                    <m:Link text="{customer_name}"
-                            target="_blank"
-                            href="http://10.2.8.58:8181/voice_mail/{path_file_record}"/>
+                    <m:Text text="{customer_name}" wrapping="false"/>
                 </template>
             </Column>
             <Column
+                    sortProperty="customer_type"
                     filterProperty="customer_type"
                     minScreenWidth="Tablet"
                     demandPopin="true">
@@ -112,6 +131,7 @@
             </Column>
             <Column
                     id="phone"
+                    sortProperty="customer_phone"
                     filterProperty="customer_phone"
                     hAlign="Center"
                     minScreenWidth="Tablet"
@@ -122,6 +142,7 @@
                 </template>
             </Column>
             <Column
+                    sortProperty="date_record"
                     filterProperty="date_record"
                     minScreenWidth="Tablet"
                     demandPopin="true">
@@ -131,6 +152,7 @@
                 </template>
             </Column>
             <Column
+                    sortProperty="branch_call"
                     filterProperty="branch_call"
                     minScreenWidth="Tablet"
                     demandPopin="true">
@@ -155,7 +177,8 @@
                 </template>
             </Column>
             <Column
-                    filterProperty="Note"
+                    sortProperty="agent_note"
+                    filterProperty="agent_note"
                     minScreenWidth="Tablet"
                     demandPopin="true">
                 <m:Label text="Note"/>

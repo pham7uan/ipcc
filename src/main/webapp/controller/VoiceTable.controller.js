@@ -3,8 +3,10 @@ sap.ui.define([
     "sap/ui/core/mvc/Controller",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
-	"sap/ui/model/FilterOperator"
-    ], function(jQuery, Controller, JSONModel , Filter, FilterOperator) {
+	"sap/ui/model/FilterOperator",
+	"sap/ui/commons/Dialog",
+	"sap/ui/core/HTML"
+    ], function(jQuery, Controller, JSONModel , Filter, FilterOperator, Dialog, HTML) {
 	"use strict";
 
 	var ListController = Controller.extend("sap.ui.ipcc.wt.controller.VoiceTable", {
@@ -24,6 +26,7 @@ sap.ui.define([
 
         	this._oGlobalFilter = null;
         	this._oPriceFilter = null;
+        	this._searchDate = false;
 
             // Date
             this.getView().setModel(new JSONModel({
@@ -75,7 +78,8 @@ sap.ui.define([
         	if (sQuery) {
         		this._oGlobalFilter = new Filter([
         			new Filter("customer_name", FilterOperator.Contains, sQuery),
-        			new Filter("customer_type", FilterOperator.Contains, sQuery)
+        			new Filter("customer_type", FilterOperator.Contains, sQuery),
+        			new Filter("customer_phone", FilterOperator.Contains, sQuery)
         		], false);
         	}
 
@@ -97,6 +101,10 @@ sap.ui.define([
         	for (var i = 0; i < aColumns.length; i++) {
         		oTable.filter(aColumns[i], null);
         	}
+
+        	// clear all sortings
+        	oTable.getBinding("rows").sort(null);
+        	this._resetSortingState();
         },
 
         toggleAvailabilityFilter : function(oEvent) {
@@ -132,19 +140,25 @@ sap.ui.define([
             oDateModel.setProperty("/dateFind", !findAllow);
 
             // Refresh default data
-            if(findAllow == true){
+            if(findAllow == true && this._searchDate){
                 this.oModel = this.initValue();
                 this.getView().setModel(this.oModel);
+                this.clearAllFilters();
+                this._searchDate = false;
             }
 		},
 
         findBetweenDate: function(evt){
             var dateStart = this.getView().byId("dateFrom").getValue();
             var dateEnd = this.getView().byId("dateTo").getValue();
+            var d1 = dateStart.split("/");
+            var d1Final = d1[2]+"-"+d1[1]+"-"+d1[0];
+            var d2 = dateEnd.split("/");
+            var d2Final = d2[2]+"-"+d2[1]+"-"+d2[0];
             var oView = this.getView();
             //alert(dateStart + " - " + dateEnd);
 
-            jQuery.ajax({url: "http://localhost:8080/api/voicemail/all?search=date_record<" + dateEnd + ",date_record>" + dateStart,
+            jQuery.ajax({url: "http://localhost:8080/api/voicemail/all?search=date_record<" + d2Final + ",date_record>" + d1Final,
                 dataType: "json",
                 success: function(oData){
                     var oModel = new JSONModel();
@@ -156,6 +170,57 @@ sap.ui.define([
                     jQuery.sap.log.error("failed");
                 }
             });
+            this._searchDate = true;
+        },
+
+        _resetSortingState : function() {
+        	var oTable = this.getView().byId("table");
+        	var aColumns = oTable.getColumns();
+        	for (var i = 0; i < aColumns.length; i++) {
+        	    aColumns[i].setSorted(false);
+            }
+        },
+
+        clickLink: function(evt) {
+            var id = evt.getSource().data("mydata");
+            var link = evt.getSource().data("mydataLink");
+            var name = evt.getSource().data("mydataName");
+            var date = evt.getSource().data("mydataDate");
+            var model = this.oModel;
+            var mainModel = model.oData;
+            var index = 0;
+            for(var i = 0; i < mainModel.length; i++){
+                if(mainModel[i].id == id){
+                    index = i;
+                    break;
+                }
+            }
+
+
+            if(id != null) {
+                jQuery.ajax({url: "http://localhost:8080/api/voicemail/update?id="+id,
+                    success: function(oData){
+                        console.log(oData)
+                        mainModel[index].status_agent_seen = "1";
+                        model.refresh();
+
+                        // play media
+                        var oDialog1 = new Dialog({
+                            closed: function() {
+                            	oDialog1.destroy();
+                            }
+                        });
+                        oDialog1.setTitle(name+ " [ "+ date+" ] ");
+                        oDialog1.addContent(new HTML("html1", { content : "<iframe   src=" + link + "  width='400' height='300' ></iframe>"  }));
+                        //oDialog1.setModal(true);
+                        oDialog1.open();
+                    },
+
+                    error: function () {
+                        jQuery.sap.log.error("failed");
+                    }
+                });
+            }
         }
 	});
 
