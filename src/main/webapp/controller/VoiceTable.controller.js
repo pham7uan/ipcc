@@ -13,7 +13,7 @@ sap.ui.define([
 
 			// create and set JSON Model
 			//this.oModel = new JSONModel(jQuery.sap.getModulePath("sap.ui.demo.mock", "/products.json"));
-			this.oModel = new JSONModel();
+			this.oModel = this.initValue();
 			this.getView().setModel(this.oModel);
 
 			this.getView().setModel(new JSONModel({
@@ -24,6 +24,29 @@ sap.ui.define([
 
         	this._oGlobalFilter = null;
         	this._oPriceFilter = null;
+
+            // Date
+            this.getView().setModel(new JSONModel({
+                "dateStart" : new Date(),
+                "dateEnd" : new Date(),
+                "dateFind": false
+            }), "dateModel");
+		},
+
+		initValue(){
+		    var oModel = new JSONModel();
+		    jQuery.ajax({url: "http://localhost:8080/api/voicemail/all?search",
+                dataType: "json",
+                success: function(oData){
+                    oModel.setData(oData);
+                },
+
+                error: function () {
+                    jQuery.sap.log.error("failed");
+                }
+            });
+
+            return oModel;
 		},
 
 		onExit : function() {
@@ -101,11 +124,40 @@ sap.ui.define([
 				}
 			});
 			oDialog.open();
-		}
+		},
 
+		showFindDate: function (evt) {
+		    var oDateModel = this.getView().getModel("dateModel");
+            var findAllow = oDateModel.getProperty("/dateFind");
+            oDateModel.setProperty("/dateFind", !findAllow);
+
+            // Refresh default data
+            if(findAllow == true){
+                this.oModel = this.initValue();
+                this.getView().setModel(this.oModel);
+            }
+		},
+
+        findBetweenDate: function(evt){
+            var dateStart = this.getView().byId("dateFrom").getValue();
+            var dateEnd = this.getView().byId("dateTo").getValue();
+            var oView = this.getView();
+            //alert(dateStart + " - " + dateEnd);
+
+            jQuery.ajax({url: "http://localhost:8080/api/voicemail/all?search=date_record<" + dateEnd + ",date_record>" + dateStart,
+                dataType: "json",
+                success: function(oData){
+                    var oModel = new JSONModel();
+                    oModel.setData(oData);
+                    oView.setModel(oModel);
+                },
+
+                error: function () {
+                    jQuery.sap.log.error("failed");
+                }
+            });
+        }
 	});
-
-
 
 	return ListController;
 

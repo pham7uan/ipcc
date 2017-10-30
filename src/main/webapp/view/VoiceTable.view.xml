@@ -55,6 +55,21 @@
         <m:SearchField value="{ui>/globalFilter}" width="15rem" search="filterGlobally" selectOnFocus="false"/>
     </m:Toolbar>
 
+    <m:Toolbar>
+        <m:ToolbarSpacer/>
+        <m:CheckBox text="{i18n>dateFindTitle}" select="showFindDate" width="15rem"/>
+        <m:Text text="From"/>
+        <m:DatePicker id="dateFrom" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem" dateValue="{dateModel>/dateStart}"/>
+        <m:Text text=""/>
+        <m:Text text="To"/>
+        <m:DatePicker id="dateTo" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem" dateValue="{dateModel>/dateEnd}"/>
+        <m:Button
+                enabled="{dateModel>/dateFind}"
+                icon="sap-icon://search"
+                tooltip="Search"
+                press="findBetweenDate"/>
+    </m:Toolbar>
+
     <Table id="table"
            selectionMode="None"
            enableCellFilter="{ui>/cellFilterOn}"
@@ -62,7 +77,7 @@
            inset="false"
            ariaLabelledBy="title"
            rows="{
-			path: 'voice>/'
+			path: '/'
 		}">
 
         <columns>
@@ -72,7 +87,7 @@
                     demandPopin="true">
                 <m:Label text="Id"/>
                 <template>
-                    <m:Text text="{voice>id}" wrapping="false"/>
+                    <m:Text text="{id}" wrapping="false"/>
                 </template>
             </Column>
             <Column
@@ -81,9 +96,9 @@
                     demandPopin="true">
                 <m:Label text="Customer Name"/>
                 <template>
-                    <m:Link text="{voice>customer_name}"
+                    <m:Link text="{customer_name}"
                             target="_blank"
-                            href="http://10.2.8.58:8181/voice_mail/{voice>path_file_record}"/>
+                            href="http://10.2.8.58:8181/voice_mail/{path_file_record}"/>
                 </template>
             </Column>
             <Column
@@ -92,7 +107,7 @@
                     demandPopin="true">
                 <m:Label text="Customer Type"/>
                 <template>
-                    <m:Text text="{voice>customer_type}" wrapping="false"/>
+                    <m:Text text="{customer_type}" wrapping="false"/>
                 </template>
             </Column>
             <Column
@@ -103,7 +118,7 @@
                     demandPopin="true">
                 <m:Label text="Customer Phone"/>
                 <template>
-                    <m:Text text="{voice>customer_phone}" wrapping="false"/>
+                    <m:Text text="{customer_phone}" wrapping="false"/>
                 </template>
             </Column>
             <Column
@@ -112,7 +127,7 @@
                     demandPopin="true">
                 <m:Label text="Date Record"/>
                 <template>
-                    <m:Text text="{voice>date_record}" wrapping="false"/>
+                    <m:Text text="{date_record}" wrapping="false"/>
                 </template>
             </Column>
             <Column
@@ -121,7 +136,7 @@
                     demandPopin="true">
                 <m:Label text="Brand Call"/>
                 <template>
-                    <m:Text text="{voice>branch_call}" wrapping="false"/>
+                    <m:Text text="{branch_call}" wrapping="false"/>
                 </template>
             </Column>
             <Column
@@ -136,7 +151,7 @@
                 <m:Label text="Seen"/>
                 <template>
                     <!--<m:Text text="{voice>status_agent_seen}" wrapping="false"/>-->
-                    <m:CheckBox editable="false" selected="{= ${voice>status_agent_seen} !== '0' }"/>
+                    <m:CheckBox editable="false" selected="{= ${status_agent_seen} !== '0' }"/>
                 </template>
             </Column>
             <Column
@@ -145,7 +160,7 @@
                     demandPopin="true">
                 <m:Label text="Note"/>
                 <template>
-                    <m:Text text="{voice>agent_note}" wrapping="false"/>
+                    <m:Text text="{agent_note}" wrapping="false"/>
                 </template>
             </Column>
         </columns>
