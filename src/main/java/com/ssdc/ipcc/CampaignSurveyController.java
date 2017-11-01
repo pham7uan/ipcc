@@ -1,9 +1,9 @@
 package com.ssdc.ipcc;
 
-import com.ssdc.ipcc.common.MyExcelView;
-import com.ssdc.ipcc.common.Util;
 import com.ssdc.ipcc.entities.CampaignSurvey;
 import com.ssdc.ipcc.entities.CampaignSurveyRepository;
+import com.ssdc.ipcc.view.MyExcelView;
+import com.ssdc.ipcc.common.Util;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -29,7 +29,7 @@ import java.util.Map;
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/api/survey")
 public class CampaignSurveyController {
-    @Autowired // This means to get the bean called userRepository
+    @Autowired
     private CampaignSurveyRepository campaignSurveyRepository;
 
     @GetMapping(path="/import") // Map ONLY GET Requests

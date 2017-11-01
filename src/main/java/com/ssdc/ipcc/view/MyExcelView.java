@@ -1,4 +1,4 @@
-package com.ssdc.ipcc.common;
+package com.ssdc.ipcc.view;
 
 
 import java.util.Map;

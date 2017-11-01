@@ -1,4 +1,4 @@
-package com.ssdc.ipcc.common;
+package com.ssdc.ipcc.view;
 
 
 import org.codehaus.jettison.json.JSONObject;
@@ -9,6 +9,7 @@ import org.springframework.web.servlet.view.document.AbstractExcelView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileOutputStream;
 import java.util.Map;
 
 public class VoiceMailExcelView extends AbstractExcelView{
@@ -20,6 +21,7 @@ public class VoiceMailExcelView extends AbstractExcelView{
 
         Map<Integer,JSONObject> revenueData = (Map<Integer,JSONObject>) model.get("voiceMailData");
         //create a wordsheet
+        FileOutputStream fileOut = new FileOutputStream("result.xlsx");
         HSSFSheet sheet = workbook.createSheet("Voice Mail");
 
         HSSFRow header = sheet.createRow(0);
@@ -44,5 +46,8 @@ public class VoiceMailExcelView extends AbstractExcelView{
             row.createCell(6).setCellValue((String)revenueData.get(i).get("status_agent_seen"));
             row.createCell(7).setCellValue((String)revenueData.get(i).get("agent_note"));
         }
+        workbook.write(fileOut);
+        fileOut.flush();
+        fileOut.close();
     }
 }
