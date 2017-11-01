@@ -36,6 +36,7 @@
             </html:audio>&ndash;&gt;
         </CustomListItem>
     </List>-->
+
     <m:Toolbar>
         <m:Title text="{i18n>voiceListTitle}"/>
         <m:ToolbarSpacer/>
@@ -59,13 +60,11 @@
     </m:Toolbar>
 
     <m:Toolbar>
-        <m:ToolbarSpacer/>
-        <m:CheckBox text="{i18n>dateFindTitle}" select="showFindDate" width="15rem"/>
-        <m:Text text="From"/>
+        <m:CheckBox text="{i18n>dateFindTitle}" select="showFindDate" width="10rem"/>
+        <m:Text text="From" textAlign="Center"/>
         <m:DatePicker id="dateFrom" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem"
                       dateValue="{dateModel>/dateStart}"/>
-        <m:Text text=""/>
-        <m:Text text="To"/>
+        <m:Text text="To" textAlign="Center"/>
         <m:DatePicker id="dateTo" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem"
                       dateValue="{dateModel>/dateEnd}"/>
         <m:Button
@@ -73,6 +72,12 @@
                 icon="sap-icon://search"
                 tooltip="Search"
                 press="findBetweenDate"/>
+        <m:ToolbarSpacer/>
+        <m:Button
+                text="Export to Excel"
+                icon="sap-icon://excel-attachment"
+                tooltip="Export table data to excel file"
+                press="exportTable"/>
     </m:Toolbar>
 
     <Table id="table"
@@ -101,7 +106,9 @@
                     demandPopin="true">
                 <m:Label text="Record"/>
                 <template>
-                    <m:Button icon="sap-icon://media-play" app:mydata="{id}" app:mydataName="{customer_name}" app:mydataDate="{date_record}" app:mydataLink="http://10.2.8.58:8181/voice_mail/{path_file_record}" press="clickLink"/>
+                    <m:Button icon="sap-icon://media-play" app:mydata="{id}" app:mydataName="{customer_name}"
+                              app:mydataDate="{date_record}"
+                              app:mydataLink="http://10.2.8.58:8181/voice_mail/{path_file_record}" press="clickLink"/>
                     <!--<m:Link text="Play"
                             target="_blank"
                             app:mydata="{id}" press="clickLink"
@@ -183,7 +190,18 @@
                     demandPopin="true">
                 <m:Label text="Note"/>
                 <template>
-                    <m:Text text="{agent_note}" wrapping="false"/>
+                    <m:HBox>
+                        <m:Input
+                                name="{id}"
+                                value="{agent_note}"
+                                type="Text"/>
+                        <m:Button
+                                icon="sap-icon://save"
+                                app:mydataInput="{id}"
+                                press="saveNote"
+                        />
+                    </m:HBox>
+
                 </template>
             </Column>
         </columns>

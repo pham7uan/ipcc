@@ -1,0 +1,11 @@
+<mvc:View
+        xmlns="sap.m"
+        xmlns:mvc="sap.ui.core.mvc">
+    <Page
+            title="{i18n>uploadTitle}"
+            showNavButton="true"
+            >
+        <ObjectHeader
+                title="Invoice"/>
+    </Page>
+</mvc:View>

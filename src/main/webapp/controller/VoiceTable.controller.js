@@ -5,9 +5,15 @@ sap.ui.define([
     "sap/ui/model/Filter",
 	"sap/ui/model/FilterOperator",
 	"sap/ui/commons/Dialog",
-	"sap/ui/core/HTML"
-    ], function(jQuery, Controller, JSONModel , Filter, FilterOperator, Dialog, HTML) {
+	"sap/m/Button",
+	"sap/ui/core/HTML",
+	"sap/ui/core/util/Export",
+	"sap/ui/core/util/ExportTypeCSV"
+    ], function(jQuery, Controller, JSONModel , Filter, FilterOperator, Dialog, Button, HTML, Export, ExportTypeCSV) {
 	"use strict";
+
+    var _tableData = null;
+    var HOST = "http://localhost:8080"
 
 	var ListController = Controller.extend("sap.ui.ipcc.wt.controller.VoiceTable", {
 
@@ -34,14 +40,34 @@ sap.ui.define([
                 "dateEnd" : new Date(),
                 "dateFind": false
             }), "dateModel");
+
+            // Table data temp
+            var table = this.getView().byId("table");    //Get hold of Table
+            table.addEventDelegate({                        //Table onAfterRendering event
+                onAfterRendering: function() {
+                    var oBinding = this.getBinding("rows");      //Get hold of binding aggregation "row"
+                    oBinding.attachChange(function(oEvent) {     //Attach 'binding' change event which fires on filter / sort
+                        var oSource = oEvent.getSource();
+                        var oLength = oSource.getLength();
+                        _tableData = oSource.aIndices;
+                        console.log(_tableData);
+                    })
+                }
+            }, table);
 		},
 
 		initValue(){
 		    var oModel = new JSONModel();
-		    jQuery.ajax({url: "http://localhost:8080/api/voicemail/all?search",
+		    jQuery.ajax({url: HOST + "/api/voicemail/all?search",
                 dataType: "json",
                 success: function(oData){
                     oModel.setData(oData);
+                    var temp = [];
+                    for(var i = 0; i < oData.length; i++) {
+                        temp.push(i);
+                    }
+                    _tableData = temp;
+                    console.log(_tableData);
                 },
 
                 error: function () {
@@ -158,12 +184,18 @@ sap.ui.define([
             var oView = this.getView();
             //alert(dateStart + " - " + dateEnd);
 
-            jQuery.ajax({url: "http://localhost:8080/api/voicemail/all?search=date_record<" + d2Final + ",date_record>" + d1Final,
+            jQuery.ajax({url: HOST + "/api/voicemail/all?search=date_record<" + d2Final + ",date_record>" + d1Final,
                 dataType: "json",
                 success: function(oData){
                     var oModel = new JSONModel();
                     oModel.setData(oData);
                     oView.setModel(oModel);
+                    var temp = [];
+                    for(var i = 0; i < oData.length; i++) {
+                        temp.push(i);
+                    }
+                    _tableData = temp;
+                    console.log(_tableData);
                 },
 
                 error: function () {
@@ -196,9 +228,8 @@ sap.ui.define([
                 }
             }
 
-
             if(id != null) {
-                jQuery.ajax({url: "http://localhost:8080/api/voicemail/update?id="+id,
+                jQuery.ajax({url: HOST + "/api/voicemail/update?id="+id+"&isSeen=1&note=''",
                     success: function(oData){
                         console.log(oData)
                         mainModel[index].status_agent_seen = "1";
@@ -221,6 +252,158 @@ sap.ui.define([
                     }
                 });
             }
+        },
+
+        saveNote: function(evt) {
+            var id = evt.getSource().data("mydataInput");
+            var dataInput = $('input[name='+id+']').val();
+
+            var dialog1 = new sap.m.Dialog({
+                title: 'Confirm',
+                type: 'Message',
+                content: new sap.m.Text({
+                    text: 'Are you sure you want to save this note?'
+                }),
+                beginButton: new Button({
+                    text: 'OK',
+                    press: function () {
+                        jQuery.ajax({url: HOST + "/api/voicemail/update?id="+id+"&isSeen=0&note="+dataInput+"",
+                            success: function(oData){
+                                console.log(oData)
+                                var dialog = new sap.m.Dialog({
+                                    title: 'Success',
+                                    type: 'Message',
+                                    state: 'Success',
+                                    content: new sap.m.Text({
+                                        text: 'Update Note Success.'
+                                    }),
+                                    beginButton: new Button({
+                                        text: 'OK',
+                                        press: function () {
+                                            dialog.close();
+                                        }
+                                    }),
+                                    afterClose: function() {
+                                        dialog.destroy();
+                                    }
+                                });
+
+                                dialog.open();
+
+                            },
+
+                            error: function () {
+                                jQuery.sap.log.error("failed");
+                            }
+                        });
+
+                        dialog1.close();
+                    }
+                }),
+                endButton: new Button({
+                    text: 'Cancel',
+                    press: function () {
+                	    dialog1.close();
+                    }
+                }),
+                afterClose: function() {
+                    dialog1.destroy();
+                }
+            });
+
+            dialog1.open();
+        },
+
+        // export
+        exportTable: function(){
+            var jsonData = this.oModel.oData;
+            var table = this.getView().byId("table");
+            var sPath = table.getBindingPath("rows");
+            var oModelObject = table.getModel().getProperty(sPath);
+            //this.generateTableCSV(table, jsonData);
+            var oExportData = [];
+            for(var i = 0; i < _tableData.length; i++) {
+                oExportData.push(oModelObject[_tableData[i]])
+            }
+            console.log(oExportData);
+            $.ajax({
+                contentType: 'application/ms-excel',
+                data: JSON.stringify(oExportData),
+                success: function(){
+                    window.location = HOST + '/api/voicemail/result'
+                },
+                error: function(){
+                    console.log("Export failed");
+                },
+                type: 'POST',
+                url: HOST + '/api/voicemail/export'
+            });
+        },
+
+        generateTableCSV: function(table, jsonData){
+            for (var i =0; i<table.getColumns().length; i++) {
+                var template = table.getColumns()[i].getTemplate();
+                switch(i){
+                    case 0:
+                        template.bindProperty("text", "id");
+                        break;
+                    case 2:
+                        template.bindProperty("text", "customer_name");
+                        break;
+                    case 3:
+                        template.bindProperty("text", "customer_type");
+                        break;
+                    case 4:
+                        template.bindProperty("text", "customer_phone");
+                        break;
+                    case 5:
+                        template.bindProperty("text", "date_record");
+                        break;
+                    case 6:
+                        template.bindProperty("text", "branch_call");
+                        break;
+                    case 8:
+                        //template.bindProperty("value", "agent_note");
+                        break;
+                }
+            }
+
+            var info = "";
+
+            for (var i =0; i<table.getColumns().length; i++) {
+                info+= encodeURIComponent(table.getColumns()[i].getLabel().getText()) + ';';
+            }
+
+            info += '\r\n';
+
+            if (jsonData.length != undefined) {
+                for (var j=0; j<jsonData.length; j++) {
+                    for (var i =0; i<table.getColumns().length; i++) {
+                        if (table.getColumns()[i].getTemplate() != undefined && table.getColumns()[i].getTemplate().mBindingInfos.text!= undefined) {
+                            var valor = eval('jsonData[j].'+table.getColumns()[i].getTemplate().mBindingInfos.text.parts[0].path);
+                            info+= encodeURIComponent(valor) + ';';
+                        } else
+                            info+= ';';
+                    }
+
+                    info += '\r\n';
+                }
+            } else {
+                $.each(jsonData, function(key,value){
+                    for (var i =0; i<table.getColumns().length; i++) {
+                        if (table.getColumns()[i].getTemplate() != undefined && table.getColumns()[i].getTemplate().mBindingInfos.text!= undefined) {
+                            var valor = eval('jsonData[j].'+table.getColumns()[i].getTemplate().mBindingInfos.text.parts[0].path);
+                            info+= encodeURIComponent(valor) + ';';
+                        } else
+                            info+= ';';
+                    }
+
+                    info += '\r\n';
+
+                });
+
+            }
+            return info;
         }
 	});
 

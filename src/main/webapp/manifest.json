@@ -46,6 +46,37 @@
 				"uri": "http://localhost:8080/api/voicemail/all?search"
 			}
 		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"viewPath": "sap.ui.ipcc.wt.view",
+				"controlId": "app",
+				"controlAggregation": "pages"
+			},
+			"routes": [
+				{
+					"pattern": "",
+					"name": "mainpage",
+					"target": "mainpage"
+				},
+				{
+					"pattern": "outbound",
+					"name": "outbound",
+					"target": "outbound"
+				}
+			],
+			"targets": {
+				"mainpage": {
+					"viewName": "MainPage",
+					"viewLevel": 0
+				},
+				"outbound": {
+					"viewName": "Outbound",
+					"viewLevel": 1
+				}
+			}
+		},
 		"resources": {
 			"css": [
 				{

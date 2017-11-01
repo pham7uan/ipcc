@@ -21,7 +21,7 @@ public class VoiceMailExcelView extends AbstractExcelView{
 
         Map<Integer,JSONObject> revenueData = (Map<Integer,JSONObject>) model.get("voiceMailData");
         //create a wordsheet
-        FileOutputStream fileOut = new FileOutputStream("result.xlsx");
+//        FileOutputStream fileOut = new FileOutputStream("result.xlsx");
         HSSFSheet sheet = workbook.createSheet("Voice Mail");
 
         HSSFRow header = sheet.createRow(0);
@@ -46,8 +46,8 @@ public class VoiceMailExcelView extends AbstractExcelView{
             row.createCell(6).setCellValue((String)revenueData.get(i).get("status_agent_seen"));
             row.createCell(7).setCellValue((String)revenueData.get(i).get("agent_note"));
         }
-        workbook.write(fileOut);
-        fileOut.flush();
-        fileOut.close();
+//        workbook.write(fileOut);
+//        fileOut.flush();
+//        fileOut.close();
     }
 }

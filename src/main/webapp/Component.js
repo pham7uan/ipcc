@@ -44,6 +44,9 @@ sap.ui.define([
 				/*eslint-enable no-alert */
 			//});
 
+            // Routing
+            // create the views based on the url/hash
+            this.getRouter().initialize();
 		},
 
 	});
