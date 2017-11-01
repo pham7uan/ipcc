@@ -2,17 +2,25 @@ package com.ssdc.ipcc;
 
 import com.ssdc.ipcc.common.SpecificationsBuilder;
 import com.ssdc.ipcc.common.Util;
+import com.ssdc.ipcc.common.VoiceMailExcelView;
 import com.ssdc.ipcc.entities.VoiceMail;
 import com.ssdc.ipcc.entities.VoiceMailRepository;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/api/voicemail") // This means URL's start with /demo (after Application path)
@@ -38,6 +46,22 @@ public class VoiceMailController {
 
         voiceMailRepository.save(voiceMail);
         return "Updated";
+    }
+
+    @PostMapping (path="/export") // Map ONLY POST Requests
+    public  ModelAndView getMyData(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, JSONException {
+        String data = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+//        JSONObject result = new JSONObject(data);
+        data = data.replace("[","").replace("]","").replace("{","");
+        String [] results = data.split("},");
+        Map<Integer,JSONObject> voiceMailData = new HashMap<Integer,JSONObject>();
+        for (int i=0; i< results.length; i++){
+            JSONObject result = new JSONObject("{"+results[i]+"}");
+            voiceMailData.put(i,result);
+        }
+        response.setContentType( "application/ms-excel" );
+        response.setHeader( "Content-disposition", "attachment; filename=myfile.xls" );
+        return new ModelAndView(new VoiceMailExcelView(),"voiceMailData",voiceMailData);
     }
 
     @GetMapping(path="/all")
