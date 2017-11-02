@@ -1,4 +1,4 @@
-package com.ssdc.ipcc;
+package com.ssdc.ipcc.controller;
 
 import com.ssdc.ipcc.common.SpecificationsBuilder;
 import com.ssdc.ipcc.common.Util;
@@ -61,7 +61,7 @@ public class VoiceMailController {
         }
         response.setContentType( "application/ms-excel");
         response.setHeader("status","200");
-        response.setHeader( "Content-disposition", "attachment; filename=myfile.xls" );
+        response.setHeader( "Content-disposition", "attachment; filename=voicemail.xls" );
         return null;
     }
 
@@ -69,7 +69,7 @@ public class VoiceMailController {
     public @ResponseBody
     ModelAndView getResult (HttpServletRequest request, HttpServletResponse response) {
         response.setContentType( "application/ms-excel" );
-        response.setHeader( "Content-disposition", "attachment; filename=myfile.xls" );
+        response.setHeader( "Content-disposition", "attachment; filename=voicemail.xls" );
         return new ModelAndView(new VoiceMailExcelView(),"voiceMailData",voiceMailData);
     }
 

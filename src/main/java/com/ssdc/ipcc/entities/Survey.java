@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "campaign_survey")
-public class CampaignSurvey {
+public class Survey {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -21,11 +21,11 @@ public class CampaignSurvey {
     private int chain_n;
     private String import_time;
 
-    public CampaignSurvey() {
+    public Survey() {
     }
 
-    public CampaignSurvey(int stt,String customer_name, String customer_id, String cell_phone,String acctrbn,
-                     String ten_cn_thuc_hien,int  chain_id, int chain_n, String import_time) {
+    public Survey(int stt, String customer_name, String customer_id, String cell_phone, String acctrbn,
+                  String ten_cn_thuc_hien, int  chain_id, int chain_n, String import_time) {
         this.customer_name = customer_name;
         this.stt = stt;
         this.customer_id = customer_id;
@@ -37,7 +37,7 @@ public class CampaignSurvey {
         this.import_time= import_time;
     }
 
-    public CampaignSurvey(Object data[]){
+    public Survey(Object data[]){
         this.stt = (Integer) data[0];
         this.customer_id = (String) data[1];
         this.customer_name = (String) data[2];

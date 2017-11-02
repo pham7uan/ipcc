@@ -1,7 +1,7 @@
-package com.ssdc.ipcc;
+package com.ssdc.ipcc.controller;
 
-import com.ssdc.ipcc.entities.CampaignSurvey;
-import com.ssdc.ipcc.entities.CampaignSurveyRepository;
+import com.ssdc.ipcc.entities.Survey;
+import com.ssdc.ipcc.entities.SurveyRepository;
 import com.ssdc.ipcc.view.MyExcelView;
 import com.ssdc.ipcc.common.Util;
 
@@ -28,9 +28,9 @@ import java.util.Map;
 
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/api/survey")
-public class CampaignSurveyController {
+public class SurveyController {
     @Autowired
-    private CampaignSurveyRepository campaignSurveyRepository;
+    private SurveyRepository surveyRepository;
 
     @GetMapping(path="/import") // Map ONLY GET Requests
     public @ResponseBody
@@ -63,7 +63,7 @@ public class CampaignSurveyController {
                         }
                         col ++;
                     }
-//                    List<CampaignSurvey> existRecords = campaignSurveyRepository.findByCustomer_id((String)data[1]);
+//                    List<Survey> existRecords = surveyRepository.findByCustomer_id((String)data[1]);
 //                    if (existRecords.size() > 0){
 //                        data[6] = 1;
 //                        data[7] = existRecords.size();
@@ -71,8 +71,8 @@ public class CampaignSurveyController {
                     data[6] =1;
                     data[7] =0;
                     data[8] = Util.getCurrentDateTime();
-                    CampaignSurvey s = new CampaignSurvey(data);
-                    campaignSurveyRepository.save(s);
+                    Survey s = new Survey(data);
+                    surveyRepository.save(s);
                 }
                 row++;
             }
@@ -101,7 +101,7 @@ public class CampaignSurveyController {
 
     @GetMapping(path="/all")
     @ResponseBody
-    public Iterable<CampaignSurvey> search() {
-        return campaignSurveyRepository.findAll();
+    public Iterable<Survey> search() {
+        return surveyRepository.findAll();
     }
 }
