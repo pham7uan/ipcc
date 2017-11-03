@@ -11,13 +11,13 @@ public class Birthday {
     private Integer id;
 
     @Column(name="business_unit")
-    private String businessunit;
+    private String businessUnit;
     @Column(name="customer_id")
-    private String Customerid;
+    private String customerId;
     @Column(name="customer_name")
-    private String CustomerName;
+    private String customerName;
     @Column(name="contact_info")
-    private String contactinfo;
+    private String contactInfo;
     private int contact_info_type = 1;
     private int record_type = 2;
     private int record_status =1;
@@ -30,40 +30,38 @@ public class Birthday {
     private int chainid;
     private int chain_n;
     @Column(name="date_of_birth")
-    private int DateOfBrith;
+    private int dateOfBrith;
     @Column(name="month_of_birth")
-    private int MonthOfBirth;
-    private String Gift;
+    private int monthOfBirth;
+    private String gift;
     @Column(name="manager_name")
-    private String ManagerName;
+    private String managerName;
     @Column(name="customer_segment")
-    private String CustomerSegment;
+    private String customerSegment;
     @Column(name="loyalty_qn_1")
     private String loyaltyQn1 ="0";
     @Column(name="other_reason01")
-    private String OtherReason01 ="0";
+    private String otherReason01 ="0";
     @Column(name="other_reason02")
-    private String OtherReason02 ="0";
+    private String otherReason02 ="0";
     @Column(name="shiper_name")
-    private String ShiperName ="0";
+    private String shiperName ="0";
     @Column(name="feedback")
-    private String Feedback ="0";
-
-
+    private String feedback ="0";
 
     public Birthday(){}
 
     public Birthday(Object data[]){
         this.id = (Integer)data[0];
-        this.businessunit = (String) data[1];
-        this.Customerid = (String) data[2];
-        this.CustomerName = (String) data[3];
-        this.contactinfo= (String) data[4];
-        this.DateOfBrith = (Integer) data[6];
-        this.MonthOfBirth = (Integer) data[7];
-        this.CustomerSegment = (String) data[8];
-        this.Gift = (String) data[10];
-        this.ManagerName = (String) data[12];
+        this.businessUnit = (String) data[1];
+        this.customerId = (String) data[2];
+        this.customerName = (String) data[3];
+        this.contactInfo= (String) data[4];
+        this.dateOfBrith = (Integer) data[6];
+        this.monthOfBirth = (Integer) data[7];
+        this.customerSegment = (String) data[8];
+        this.gift = (String) data[10];
+        this.managerName = (String) data[12];
         this.chainid = (Integer) data[13];
         this.chain_n = (Integer) data[14];
     }
@@ -76,36 +74,36 @@ public class Birthday {
         this.id = id;
     }
 
-    public String getBusinessunit() {
-        return businessunit;
+    public String getBusinessUnit() {
+        return businessUnit;
     }
 
-    public void setBusinessunit(String businessunit) {
-        businessunit = businessunit;
+    public void setBusinessUnit(String businessUnit) {
+        this.businessUnit = businessUnit;
     }
 
-    public String getCustomerid() {
-        return Customerid;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerid(String Customerid) {
-        Customerid = Customerid;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getCustomerName() {
-        return CustomerName;
+        return customerName;
     }
 
     public void setCustomerName(String customerName) {
-        CustomerName = customerName;
+        this.customerName = customerName;
     }
 
-    public String getContactinfo() {
-        return contactinfo;
+    public String getContactInfo() {
+        return contactInfo;
     }
 
-    public void setContactinfo(String contactinfo) {
-        this.contactinfo = contactinfo;
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
     }
 
     public int getContact_info_type() {
@@ -189,43 +187,43 @@ public class Birthday {
     }
 
     public int getDateOfBrith() {
-        return DateOfBrith;
+        return dateOfBrith;
     }
 
     public void setDateOfBrith(int dateOfBrith) {
-        DateOfBrith = dateOfBrith;
+        this.dateOfBrith = dateOfBrith;
     }
 
     public int getMonthOfBirth() {
-        return MonthOfBirth;
+        return monthOfBirth;
     }
 
     public void setMonthOfBirth(int monthOfBirth) {
-        MonthOfBirth = monthOfBirth;
+        this.monthOfBirth = monthOfBirth;
     }
 
     public String getGift() {
-        return Gift;
+        return gift;
     }
 
     public void setGift(String gift) {
-        Gift = gift;
+        this.gift = gift;
     }
 
     public String getManagerName() {
-        return ManagerName;
+        return managerName;
     }
 
     public void setManagerName(String managerName) {
-        ManagerName = managerName;
+        this.managerName = managerName;
     }
 
     public String getCustomerSegment() {
-        return CustomerSegment;
+        return customerSegment;
     }
 
     public void setCustomerSegment(String customerSegment) {
-        CustomerSegment = customerSegment;
+        this.customerSegment = customerSegment;
     }
 
     public String getLoyaltyQn1() {
@@ -237,18 +235,34 @@ public class Birthday {
     }
 
     public String getOtherReason01() {
-        return OtherReason01;
+        return otherReason01;
     }
 
     public void setOtherReason01(String otherReason01) {
-        OtherReason01 = otherReason01;
+        this.otherReason01 = otherReason01;
     }
 
     public String getOtherReason02() {
-        return OtherReason02;
+        return otherReason02;
     }
 
     public void setOtherReason02(String otherReason02) {
-        OtherReason02 = otherReason02;
+        this.otherReason02 = otherReason02;
+    }
+
+    public String getShiperName() {
+        return shiperName;
+    }
+
+    public void setShiperName(String shiperName) {
+        this.shiperName = shiperName;
+    }
+
+    public String getFeedback() {
+        return feedback;
+    }
+
+    public void setFeedback(String feedback) {
+        this.feedback = feedback;
     }
 }

@@ -51,9 +51,9 @@ public class SurveyController {
                     while (cellIterator.hasNext()) {
                         if (col < 6) {//number column need to import
                             Cell currentCell = cellIterator.next();
-                            if (currentCell.getCellTypeEnum() == CellType.STRING) {
+                            if (currentCell.getCellType() == currentCell.CELL_TYPE_STRING) {
                                 data[col] = currentCell.getStringCellValue();
-                            } else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
+                            } else if (currentCell.getCellType() == currentCell.CELL_TYPE_NUMERIC) {
                                 if (col == 1 || col ==3 || col ==4){
                                     data[col] = Integer.toString((int)currentCell.getNumericCellValue());
                                 } else {

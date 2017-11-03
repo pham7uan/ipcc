@@ -4,17 +4,20 @@ import com.ssdc.ipcc.common.Util;
 import com.ssdc.ipcc.entities.Birthday;
 import com.ssdc.ipcc.entities.BirthdayRepository;
 import com.ssdc.ipcc.entities.Survey;
+import com.ssdc.ipcc.view.BirthdayExcelView;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 
 
 @Controller    // This means that this class is a Controller
@@ -51,9 +54,9 @@ public class BirthdayController {
                 for(int cellNum=0;cellNum<numOfCellPerRow;cellNum++){
                     Cell currentCell=row.getCell(cellNum);
                     if (currentCell != null){
-                        if (currentCell.getCellTypeEnum() == CellType.STRING) {
+                        if (currentCell.getCellType() == currentCell.CELL_TYPE_STRING) {
                             data[cellNum] = currentCell.getStringCellValue();
-                        } else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
+                        } else if (currentCell.getCellType() == currentCell.CELL_TYPE_NUMERIC) {
                             if (cellNum == 2 || cellNum ==4 || cellNum ==5){
                                 data[cellNum] = Integer.toString((int)currentCell.getNumericCellValue());
                             } else {
@@ -158,5 +161,21 @@ public class BirthdayController {
         }
         System.out.println(log);
         return log;
+    }
+
+    @GetMapping(path="/export") // Map ONLY GET Requests
+    public @ResponseBody
+    ModelAndView getResult (HttpServletRequest request, HttpServletResponse response) {
+        Map<Integer,Birthday> birthdayData = new HashMap<Integer,Birthday>();
+        Iterable<Birthday> birthdays = birthdayRepository.findAll();
+        int stt =0;
+        for (Birthday b:birthdays){
+            birthdayData.put(stt,b);
+            stt++;
+        }
+
+        response.setContentType( "application/ms-excel" );
+        response.setHeader( "Content-disposition", "attachment; filename=BirthdayCampaign.xls" );
+        return new ModelAndView(new BirthdayExcelView(),"birthdayData",birthdayData);
     }
 }
