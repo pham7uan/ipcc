@@ -60,7 +60,7 @@
     </m:Toolbar>
 
     <m:Toolbar>
-        <m:CheckBox text="{i18n>dateFindTitle}" select="showFindDate" width="10rem"/>
+        <m:CheckBox text="{i18n>dateFindTitle}" select="showFindDate" width="10.7rem"/>
         <m:Text text="From" textAlign="Center"/>
         <m:DatePicker id="dateFrom" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem"
                       dateValue="{dateModel>/dateStart}"/>
@@ -93,7 +93,7 @@
         <columns>
             <Column
                     hAlign="Center"
-                    width="5em"
+                    width="4em"
                     demandPopin="true">
                 <m:Label text="Id"/>
                 <template>
@@ -175,7 +175,7 @@
                     filterType="sap.ui.model.type.Boolean"
                     filterProperty="status_agent_seen"
                     hAlign="Center"
-                    minScreenWidth="Tablet"
+                    width="4em"
                     demandPopin="true">
                 <m:Label text="Seen"/>
                 <template>

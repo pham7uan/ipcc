@@ -9,3 +9,7 @@ html[dir="rtl"] .myAppDemoWT .myCustomButton.sapMBtn {
 .myAppDemoWT .myCustomText {
 	font-weight: bold;
 }
+
+.sapUiDSC.sapUiDSCExplored h1 {
+	font-size: 2rem;
+}

@@ -242,7 +242,7 @@ sap.ui.define([
                             }
                         });
                         oDialog1.setTitle(name+ " [ "+ date+" ] ");
-                        oDialog1.addContent(new HTML("html1", { content : "<iframe   src=" + link + "  width='400' height='300' ></iframe>"  }));
+                        oDialog1.addContent(new HTML("html_"+id, { content : "<iframe   src=" + link + "  width='400' height='300' ></iframe>"  }));
                         //oDialog1.setModal(true);
                         oDialog1.open();
                     },

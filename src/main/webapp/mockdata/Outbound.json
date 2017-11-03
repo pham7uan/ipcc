@@ -1,0 +1,16 @@
+{
+  "OutboundTables" : [
+    {
+      "id": 0,
+      "name": "-- Select --"
+    },
+    {
+      "id": 1,
+      "name": "Birthday"
+    },
+    {
+      "id": 2,
+      "name": "Survey"
+    }
+  ]
+}

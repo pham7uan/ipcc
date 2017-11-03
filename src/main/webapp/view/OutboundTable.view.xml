@@ -1,0 +1,78 @@
+<mvc:View
+        controllerName="sap.ui.ipcc.wt.controller.OutboundTable"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+        xmlns="sap.ui.table"
+        xmlns:mvc="sap.ui.core.mvc"
+        xmlns:u="sap.ui.unified"
+        xmlns:l="sap.ui.layout"
+        xmlns:c="sap.ui.core"
+        xmlns:m="sap.m">
+
+    <m:Toolbar>
+        <m:Title text="{i18n>outboundListTitle}"/>
+        <m:ToolbarSpacer/>
+        <m:Button
+                enabled="false"
+                text="Export to Excel"
+                icon="sap-icon://excel-attachment"
+                tooltip="Export table data to excel file"
+                press="exportTable"/>
+    </m:Toolbar>
+
+    <m:HBox class="sapUiSmallMargin">
+        <m:Text text="Select Table To Import" textAlign="Center" class="sapUiSmallMargin"/>
+        <m:ComboBox
+                class="sapUiSmallMarginEnd"
+                id="combobox"
+                selectedKey="0"
+                items="{
+					path: '/OutboundTables',
+					sorter: { path: 'name' }
+				}">
+            <c:Item key="{id}" text="{name}" />
+        </m:ComboBox>
+
+        <u:FileUploader
+                class="sapUiSmallMarginEnd"
+                id="fileUploader"
+                name="file"
+                uploadUrl="/api/birthday/import/"
+                width="400px"
+                tooltip="Upload your file to the server"
+                uploadComplete="handleUploadComplete"
+                change="handleValueChange"
+                typeMissmatch="handleTypeMissmatch"
+                style="Emphasized"
+                fileType="xlsx,xls"
+                placeholder="Choose a file for Upload...">
+            <u:parameters>
+                <u:FileUploaderParameter
+                        name="param1"
+                        value="Foo"/>
+                <u:FileUploaderParameter
+                        name="param2"
+                        value="bar"/>
+            </u:parameters>
+            <u:headerParameters>
+                <u:FileUploaderParameter
+                        name="headerParam1"
+                        value="Foo"/>
+                <u:FileUploaderParameter
+                        name="headerParam2"
+                        value="bar"/>
+            </u:headerParameters>
+        </u:FileUploader>
+        <m:Button
+                id="btnUpload"
+                icon="sap-icon://upload"
+                tooltip="Upload data from excel file"
+                text="Upload File"
+                press="handleUploadPress"/>
+    </m:HBox>
+
+    <m:Text id="result" text="" textAlign="Center" width="100%">
+
+    </m:Text>
+
+</mvc:View>
