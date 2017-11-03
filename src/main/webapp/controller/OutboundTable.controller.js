@@ -51,7 +51,7 @@ sap.ui.define([
 		},
 
 		handleValueChange: function(oEvent) {
-        	MessageToast.show("Press 'Upload File' to upload file '" +
+        	MessageToast.show("Press 'Import File' to import file '" +
         		    oEvent.getParameter("newValue") + "'");
         },
 
@@ -72,7 +72,6 @@ sap.ui.define([
 		    } else {
 		        this.showErrorPopover();
 		    }
-
 		},
 
 		handleUploadComplete: function(oEvent) {
@@ -86,8 +85,8 @@ sap.ui.define([
         		} else {
         		    sMsg = "Return Code: " + m[1] + "\n" + m[2] + "(Upload Error)";
         		}*/
-                this.getView().byId("result").setText(sResponse);
-        		MessageToast.show(sResponse);
+                this.getView().byId("result").setValue("<b>"+sResponse+"</b>");
+        		//MessageToast.show(sResponse);
         	}
         },
 
@@ -115,7 +114,7 @@ sap.ui.define([
             var dialog = new sap.m.Dialog({
             	title: 'Confirm',
             	type: 'Message',
-            	content: new sap.m.Text({ text: 'Are you sure you want to upload this file?' }),
+            	content: new sap.m.Text({ text: 'Are you sure you want to import this file?' }),
             	beginButton: new sap.m.Button({
             	    text: 'Upload',
             		press: function () {
@@ -138,6 +137,84 @@ sap.ui.define([
 
         },
 
+        handleDownloadPress : function() {
+            var dialog = new sap.m.Dialog({
+                title: 'Confirm',
+                type: 'Message',
+                content: new sap.m.Text({ text: 'Are you sure you want to download?' }),
+                beginButton: new sap.m.Button({
+                    text: 'Download',
+                    press: function () {
+                        $.ajax({
+                            success: function(result){
+                                //MessageToast.show(result);
+                                window.location=HOST + '/api/birthday/form'
+                            },
+                            error: function(){
+                                console.log("Download failed");
+                            },
+                            type: 'GET',
+                            url: HOST + '/api/birthday/form'
+                        });
+                        dialog.close();
+                    }
+                }),
+                endButton: new sap.m.Button({
+                    text: 'Cancel',
+                    press: function () {
+                        dialog.close();
+                    }
+                }),
+                afterClose: function() {
+                    dialog.destroy();
+                }
+            });
+
+            dialog.open();
+        },
+
+        exportFile : function() {
+            var combobox = this.getView().byId("combobox");
+            var selected = combobox.getSelectedKey();
+            if(selected == 0) {
+                this.showErrorPopover();
+                return;
+            }
+
+            var dialog = new sap.m.Dialog({
+                title: 'Confirm',
+                type: 'Message',
+                content: new sap.m.Text({ text: 'Are you sure you want to export?' }),
+                beginButton: new sap.m.Button({
+                    text: 'Export',
+                    press: function () {
+                        $.ajax({
+                            success: function(result){
+                                //MessageToast.show(result);
+                                window.location=HOST + '/api/birthday/export'
+                            },
+                            error: function(){
+                                console.log("Export failed");
+                            },
+                            type: 'GET',
+                            url: HOST + '/api/birthday/export'
+                        });
+                        dialog.close();
+                    }
+                }),
+                endButton: new sap.m.Button({
+                    text: 'Cancel',
+                    press: function () {
+                        dialog.close();
+                    }
+                }),
+                afterClose: function() {
+                    dialog.destroy();
+                }
+            });
+
+            dialog.open();
+        }
 
 	});
 

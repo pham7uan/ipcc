@@ -8,8 +8,9 @@ sap.ui.define([
 	"sap/m/Button",
 	"sap/ui/core/HTML",
 	"sap/ui/core/util/Export",
-	"sap/ui/core/util/ExportTypeCSV"
-    ], function(jQuery, Controller, JSONModel , Filter, FilterOperator, Dialog, Button, HTML, Export, ExportTypeCSV) {
+	"sap/ui/core/util/ExportTypeCSV",
+	"sap/m/MessageToast"
+    ], function(jQuery, Controller, JSONModel , Filter, FilterOperator, Dialog, Button, HTML, Export, ExportTypeCSV, MessageToast) {
 	"use strict";
 
     var _tableData = null;
@@ -320,24 +321,54 @@ sap.ui.define([
             var table = this.getView().byId("table");
             var sPath = table.getBindingPath("rows");
             var oModelObject = table.getModel().getProperty(sPath);
-            //this.generateTableCSV(table, jsonData);
-            var oExportData = [];
-            for(var i = 0; i < _tableData.length; i++) {
-                oExportData.push(oModelObject[_tableData[i]])
-            }
-            console.log(oExportData);
-            $.ajax({
-                contentType: 'application/ms-excel',
-                data: JSON.stringify(oExportData),
-                success: function(){
-                    window.location = HOST + '/api/voicemail/result'
-                },
-                error: function(){
-                    console.log("Export failed");
-                },
-                type: 'POST',
-                url: HOST + '/api/voicemail/export'
+
+            var dialog = new sap.m.Dialog({
+                title: 'Confirm',
+                type: 'Message',
+                content: new sap.m.Text({ text: 'Are you sure you want to export?' }),
+                beginButton: new sap.m.Button({
+                    text: 'Export',
+                    press: function () {
+                        var oExportData = [];
+                        for(var i = 0; i < _tableData.length; i++) {
+                            oExportData.push(oModelObject[_tableData[i]])
+                        }
+                        console.log(oExportData);
+                        if(oExportData.length == 0) {
+                            MessageToast.show("No data to export!");
+                            dialog.close();
+                            return;
+                        }
+
+                        $.ajax({
+                            contentType: 'application/ms-excel',
+                            data: JSON.stringify(oExportData),
+                            success: function(){
+                                window.location = HOST + '/api/voicemail/result'
+                            },
+                            error: function(){
+                                console.log("Export failed");
+                            },
+                            type: 'POST',
+                            url: HOST + '/api/voicemail/export'
+                        });
+                        dialog.close();
+                    }
+                }),
+                endButton: new sap.m.Button({
+                    text: 'Cancel',
+                    press: function () {
+                        dialog.close();
+                    }
+                }),
+                afterClose: function() {
+                    dialog.destroy();
+                }
             });
+
+            dialog.open();
+
+            //this.generateTableCSV(table, jsonData);
         },
 
         generateTableCSV: function(table, jsonData){

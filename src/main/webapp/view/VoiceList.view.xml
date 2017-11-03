@@ -1,16 +1,15 @@
 <mvc:View
+        controllerName="sap.ui.ipcc.wt.controller.VoiceList"
         xmlns="sap.m"
         xmlns:mvc="sap.ui.core.mvc">
-    <List
-            headerText="{i18n>voiceListTitle}"
-            class="sapUiResponsiveMargin"
-            width="auto"
-            items="{voice>/}">
-        <items>
-            <ObjectListItem
-                    title="{voice>id} : {voice>customer_name}"
+    <Page title="Voicemail" enableScrolling="true" class="sapUiContentPadding"
+          showNavButton="true"
+          navButtonPress="onNavBack">
+        <headerContent>
 
-            />
-        </items>
-    </List>
+        </headerContent>
+        <content>
+            <mvc:XMLView viewName="sap.ui.ipcc.wt.view.VoiceTable"/>
+        </content>
+    </Page>
 </mvc:View>
