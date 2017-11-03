@@ -7,6 +7,7 @@ import com.ssdc.ipcc.entities.Survey;
 import com.ssdc.ipcc.view.BirthdayExcelView;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,7 @@ public class BirthdayController {
         InputStream in = file.getInputStream();
         String log = "Import result\n";
         String errorLog ="Import fail in: \n";
+        String log_form_err = "Import fail. Your excel file is not correct form.\nYou can get form by click Get form import";
         Integer numSuccess = 0;
         Integer numFail = 0;
         Integer total =0;
@@ -45,10 +47,16 @@ public class BirthdayController {
             Workbook workbook = new XSSFWorkbook(in);
             Sheet datatypeSheet = workbook.getSheetAt(0);
             int numOfRows=datatypeSheet.getPhysicalNumberOfRows();
+            if (numOfRows < 3){
+                return log_form_err;
+            }
             total = numOfRows -2;
             for(int rowNum=2;rowNum<numOfRows;rowNum++){
                 Row row=datatypeSheet.getRow(rowNum);
                 int numOfCellPerRow=row.getLastCellNum();
+                if (numOfCellPerRow !=13){
+                    return log_form_err;
+                }
                 Object[] data = new Object[15];
                 boolean validate = true;
                 for(int cellNum=0;cellNum<numOfCellPerRow;cellNum++){
@@ -149,11 +157,13 @@ public class BirthdayController {
 //                }
 //                row++;
 //            }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            return log_form_err;
         }
+//        catch (IOException e) {
+//            e.printStackTrace();
+//        }
         log = log + "- Import success "+numSuccess+"/"+total+".\n";
         log = log + " -Import fail "+numFail+"/"+total+".\n";
         if (numFail>0){
@@ -177,5 +187,20 @@ public class BirthdayController {
         response.setContentType( "application/ms-excel" );
         response.setHeader( "Content-disposition", "attachment; filename=BirthdayCampaign.xls" );
         return new ModelAndView(new BirthdayExcelView(),"birthdayData",birthdayData);
+    }
+
+    @GetMapping(path="/form") // Map ONLY GET Requests
+    public void getDownload(HttpServletResponse response) throws IOException {
+
+        String FILE_NAME = "birthday.xlsx";
+        FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+
+        // Set the content type and attachment header.
+        response.addHeader("Content-disposition", "attachment;filename=BirthdayCampaignForm.xlsx");
+        response.setContentType("application/ms-excel");
+
+        // Copy the stream to the response's output stream.
+        IOUtils.copy(excelFile, response.getOutputStream());
+        response.flushBuffer();
     }
 }
