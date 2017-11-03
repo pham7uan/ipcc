@@ -4,7 +4,12 @@ sap.ui.define([
 	"use strict";
 
 	return Controller.extend("sap.ui.ipcc.wt.controller.MainPage", {
-        onOpenImportPage : function() {
+        onOpenVoiceListPage : function() {
+            var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            oRouter.navTo("voicelist");
+        },
+
+        onOpenOutboundPage : function() {
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             oRouter.navTo("outbound");
         }

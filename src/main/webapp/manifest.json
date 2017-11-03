@@ -64,6 +64,11 @@
 					"pattern": "outbound",
 					"name": "outbound",
 					"target": "outbound"
+				},
+				{
+					"pattern": "voicelist",
+					"name": "voicelist",
+					"target": "voicelist"
 				}
 			],
 			"targets": {
@@ -73,6 +78,10 @@
 				},
 				"outbound": {
 					"viewName": "Outbound",
+					"viewLevel": 1
+				},
+				"voicelist": {
+					"viewName": "VoiceList",
 					"viewLevel": 1
 				}
 			}

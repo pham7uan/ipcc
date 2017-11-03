@@ -175,7 +175,7 @@
                     filterType="sap.ui.model.type.Boolean"
                     filterProperty="status_agent_seen"
                     hAlign="Center"
-                    width="4em"
+                    width="5em"
                     demandPopin="true">
                 <m:Label text="Seen"/>
                 <template>

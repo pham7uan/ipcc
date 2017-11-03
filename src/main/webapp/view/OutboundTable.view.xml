@@ -13,15 +13,15 @@
         <m:Title text="{i18n>outboundListTitle}"/>
         <m:ToolbarSpacer/>
         <m:Button
-                enabled="false"
-                text="Export to Excel"
-                icon="sap-icon://excel-attachment"
-                tooltip="Export table data to excel file"
-                press="exportTable"/>
+                id="btnDownload"
+                icon="sap-icon://download"
+                tooltip="Download sample excel file"
+                text="Get Import Form"
+                press="handleDownloadPress"/>
     </m:Toolbar>
 
     <m:HBox class="sapUiSmallMargin">
-        <m:Text text="Select Table To Import" textAlign="Center" class="sapUiSmallMargin"/>
+        <m:Text text="Select Table" textAlign="Center" class="sapUiSmallMargin"/>
         <m:ComboBox
                 class="sapUiSmallMarginEnd"
                 id="combobox"
@@ -39,13 +39,13 @@
                 name="file"
                 uploadUrl="/api/birthday/import/"
                 width="400px"
-                tooltip="Upload your file to the server"
+                tooltip="Import your file to the database"
                 uploadComplete="handleUploadComplete"
                 change="handleValueChange"
                 typeMissmatch="handleTypeMissmatch"
                 style="Emphasized"
                 fileType="xlsx,xls"
-                placeholder="Choose a file for Upload...">
+                placeholder="Choose a file for Import...">
             <u:parameters>
                 <u:FileUploaderParameter
                         name="param1"
@@ -64,15 +64,21 @@
             </u:headerParameters>
         </u:FileUploader>
         <m:Button
+                class="sapUiSmallMarginEnd"
                 id="btnUpload"
                 icon="sap-icon://upload"
-                tooltip="Upload data from excel file"
-                text="Upload File"
+                tooltip="Import data from excel file"
+                text="Import File"
                 press="handleUploadPress"/>
+        <m:Button
+                text="Export to Excel"
+                icon="sap-icon://excel-attachment"
+                tooltip="Export table data to excel file"
+                press="exportFile"/>
     </m:HBox>
 
-    <m:Text id="result" text="" textAlign="Center" width="100%">
+    <m:TextArea id="result" growing="true" editable="false" value="" textAlign="Left" width="100%">
 
-    </m:Text>
+    </m:TextArea>
 
 </mvc:View>

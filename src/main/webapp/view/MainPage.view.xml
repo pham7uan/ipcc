@@ -4,13 +4,21 @@
         xmlns:mvc="sap.ui.core.mvc">
     <Page title="IPCC" enableScrolling="true" class="sapUiContentPadding">
         <headerContent>
-            <Button
-                    icon="sap-icon://excel-attachment"
-                    tooltip="Outbound Page"
-                    press="onOpenImportPage"/>
+
         </headerContent>
         <content>
-            <mvc:XMLView viewName="sap.ui.ipcc.wt.view.VoiceTable"/>
+            <VBox class="sapUiSmallMargin">
+                <Button
+                        width="100%"
+                        text="Open Voice List Page"
+                        tooltip="VoiceList Page"
+                        press="onOpenVoiceListPage"/>
+                <Button
+                        width="100%"
+                        text="Open Outbound Page"
+                        tooltip="Outbound Page"
+                        press="onOpenOutboundPage"/>
+            </VBox>
         </content>
     </Page>
 </mvc:View>
