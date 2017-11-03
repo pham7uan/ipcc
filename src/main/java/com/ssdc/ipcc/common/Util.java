@@ -56,4 +56,33 @@ public class Util {
             }
         return null;
     }
+
+    public static <T> List<T> PaginationList(List<T> list,int size,int page){
+        List<T> p;
+        int numPage=0;
+        if (list.size()%size > 0){
+            numPage = list.size()/size +1;
+        } else  {
+            numPage = list.size()/size;
+        }
+        if (page <0 || page>numPage){
+            return null;
+        }
+
+        if (list.size() >size){
+            if (page==1){
+                p = list.subList(0,size);
+                return p;
+            } else if(page<numPage){
+                p = list.subList(page*size - size,page*size);
+                return p;
+            } else if(page==numPage){
+                p=list.subList(page*size -size,list.size());
+                return p;
+            }
+        } else {
+            return list;
+        }
+        return list;
+    }
 }

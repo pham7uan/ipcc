@@ -8,7 +8,7 @@ public class Birthday {
     @Id
 //    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name="record_id")
-    private Integer id;
+    private Long id;
 
     @Column(name="business_unit")
     private String businessUnit;
@@ -52,7 +52,7 @@ public class Birthday {
     public Birthday(){}
 
     public Birthday(Object data[]){
-        this.id = (Integer)data[0];
+        this.id = (Long)data[0];
         this.businessUnit = (String) data[1];
         this.customerId = (String) data[2];
         this.customerName = (String) data[3];
@@ -66,11 +66,11 @@ public class Birthday {
         this.chain_n = (Integer) data[14];
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
