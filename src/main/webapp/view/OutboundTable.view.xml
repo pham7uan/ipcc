@@ -37,7 +37,7 @@
                 class="sapUiSmallMarginEnd"
                 id="fileUploader"
                 name="file"
-                uploadUrl="/api/birthday/import/"
+                uploadUrl="/api/{selectModel>/table}/import/"
                 width="400px"
                 tooltip="Import your file to the database"
                 uploadComplete="handleUploadComplete"

@@ -24,6 +24,11 @@ sap.ui.define([
 			this.oModel = this.initValue();
 			this.getView().setModel(this.oModel);
 
+			// Select table
+			this.getView().setModel(new JSONModel({
+                "table": "birthday"
+            }), "selectModel");
+
 		},
 
 		initValue(){
@@ -67,7 +72,13 @@ sap.ui.define([
 		handleUploadPress : function() {
 		    var combobox = this.getView().byId("combobox");
 		    var selected = combobox.getSelectedKey();
+		    var oUiModel = this.getView().getModel("selectModel");
 		    if(selected > 0) {
+		        if(selected == 1) {
+		            oUiModel.setProperty("/table", "birthday");
+		        } else if(selected == 2) {
+                    oUiModel.setProperty("/table", "survey");
+                }
                 this.uploadFile();
 		    } else {
 		        this.showErrorPopover();
