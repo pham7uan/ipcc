@@ -53,10 +53,10 @@ public class BirthdayController {
             Sheet datatypeSheet = workbook.getSheetAt(0);
             int numOfRows=datatypeSheet.getPhysicalNumberOfRows();
             if (numOfRows < 3){
+                iResult.put("pages","0");
                 iResult.put("error",log_form_err);
                 iResult.put("success","0");
                 iResult.put("fail","0");
-                iResult.put("pages","0");
                 return iResult;
             }
             total = numOfRows -2;
@@ -64,10 +64,10 @@ public class BirthdayController {
                 Row row=datatypeSheet.getRow(rowNum);
                 int numOfCellPerRow=row.getLastCellNum();
                 if (numOfCellPerRow !=13){
+                    iResult.put("pages","0");
                     iResult.put("error",log_form_err);
                     iResult.put("success","0");
                     iResult.put("fail","0");
-                    iResult.put("pages","0");
                     return iResult;
                 }
                 Object[] data = new Object[15];
@@ -136,10 +136,10 @@ public class BirthdayController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            iResult.put("pages","0");
             iResult.put("error",log_form_err);
             iResult.put("success","0");
             iResult.put("fail","0");
-            iResult.put("pages","0");
             return iResult;
         }
 //        catch (IOException e) {
@@ -151,10 +151,10 @@ public class BirthdayController {
             log = log + errorLog;
         }
         int numPage = Util.getNumPage(import_list);
+        iResult.put("pages",Integer.toString(numPage));
         iResult.put("error",errorLog);
         iResult.put("success",Integer.toString(numSuccess));
         iResult.put("fail",Integer.toString(numFail));
-        iResult.put("pages",Integer.toString(numPage));
         return iResult;
 //        return log;
     }
