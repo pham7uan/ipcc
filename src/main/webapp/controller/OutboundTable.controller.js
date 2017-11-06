@@ -22,12 +22,27 @@ sap.ui.define([
 			// create and set JSON Model
 			//this.oModel = new JSONModel(jQuery.sap.getModulePath("sap.ui.demo.mock", "/products.json"));
 			this.oModel = this.initValue();
-			this.getView().setModel(this.oModel);
+			//this.getView().setModel(this.oModel);
+
+            // combo box
+            var combobox = this.getView().byId("combobox");
+            combobox.setModel(this.oModel);
+            var oItemTemplate = new sap.ui.core.ListItem();
+            oItemTemplate.bindProperty("key", "id");
+            oItemTemplate.bindProperty("text", "name");
+            combobox.bindItems("/OutboundTables", oItemTemplate);
 
 			// Select table
 			this.getView().setModel(new JSONModel({
-                "table": "birthday"
+                "table": ""
             }), "selectModel");
+
+            // Table Data
+            this.tableModel = new JSONModel();
+            this.getView().setModel(this.tableModel);
+
+            this._currentPage = 0;
+            this._totalPage = 0;
 
 		},
 
@@ -47,9 +62,26 @@ sap.ui.define([
             return oModel;
 		},
 
+		getTableData(table, page){
+            var oModel = new JSONModel();
+            jQuery.ajax({url: HOST + "/api/" + table + "/all?page=" + page,
+                dataType: "json",
+                success: function(oData){
+                    oModel.setData(oData);
+                },
+
+                error: function () {
+                    jQuery.sap.log.error("failed");
+                }
+            });
+
+            return oModel;
+        },
+
 		onExit : function() {
 			// destroy the model
 			this.oModel.destroy();
+			this.tableModel.destroy();
 			if (this._oPopover) {
                 this._oPopover.destroy();
             }
@@ -74,11 +106,6 @@ sap.ui.define([
 		    var selected = combobox.getSelectedKey();
 		    var oUiModel = this.getView().getModel("selectModel");
 		    if(selected > 0) {
-		        if(selected == 1) {
-		            oUiModel.setProperty("/table", "birthday");
-		        } else if(selected == 2) {
-                    oUiModel.setProperty("/table", "survey");
-                }
                 this.uploadFile();
 		    } else {
 		        this.showErrorPopover();
@@ -96,8 +123,46 @@ sap.ui.define([
         		} else {
         		    sMsg = "Return Code: " + m[1] + "\n" + m[2] + "(Upload Error)";
         		}*/
-                this.getView().byId("result").setValue("<b>"+sResponse+"</b>");
+        		var response = sResponse.substring(sResponse.indexOf(">{")+1, sResponse.indexOf("}<") + 1);
+                this.getView().byId("result").setValue(response);
+                var myJSON = JSON.parse(response);
+
+                var page = myJSON.pages;
+                if(page != null) {
+                    this._totalPage = parseInt(page);
+                }
+
+                if(this._totalPage > 0) {
+                    var oUiModel = this.getView().getModel("selectModel");
+                    var tableName = oUiModel.getProperty("/table");
+                    this._currentPage = 1;
+                    this.tableModel = this.getTableData(tableName,this._currentPage);
+                    this.getView().setModel(this.tableModel);
+                    this.getView().byId("pageTextId").setText("Page "+ this._currentPage);
+                    var rs = "+ Import Success: "+myJSON.success +
+                             "\n+ Import Fail: "+myJSON.fail;
+                    if(myJSON.error.length > 0)
+                        rs+="\n+ Error: "+myJSON.error;
+                    this.getView().byId("result").setValue("-- RESULT --\n\n" + rs);
+                } else {
+                    this._currentPage = 0;
+                    this._totalPage = 0;
+                    this.tableModel = new JSONModel();
+                    this.getView().setModel(this.tableModel);
+                    this.getView().byId("pageTextId").setText("Page 1");
+
+                    this.getView().byId("result").setValue("-- ERROR --\n\n" + myJSON.error);
+                }
         		//MessageToast.show(sResponse);
+
+        		var selected = this.getView().byId("combobox").getSelectedKey();
+        		if(selected == 1) {
+                    this.getView().byId("table_birthday").setVisible(true);
+                    this.getView().byId("table_survey").setVisible(false);
+                } else if(selected == 2) {
+                    this.getView().byId("table_birthday").setVisible(false);
+                    this.getView().byId("table_survey").setVisible(true);
+                }
         	}
         },
 
@@ -127,7 +192,7 @@ sap.ui.define([
             	type: 'Message',
             	content: new sap.m.Text({ text: 'Are you sure you want to import this file?' }),
             	beginButton: new sap.m.Button({
-            	    text: 'Upload',
+            	    text: 'Import',
             		press: function () {
             		    oFileUploader.upload();
             			dialog.close();
@@ -149,6 +214,15 @@ sap.ui.define([
         },
 
         handleDownloadPress : function() {
+            var combobox = this.getView().byId("combobox");
+            var selected = combobox.getSelectedKey();
+            if(selected == 0) {
+                this.showErrorPopover();
+                return;
+            }
+
+            var oUiModel = this.getView().getModel("selectModel");
+            var tableName = oUiModel.getProperty("/table");
             var dialog = new sap.m.Dialog({
                 title: 'Confirm',
                 type: 'Message',
@@ -159,13 +233,13 @@ sap.ui.define([
                         $.ajax({
                             success: function(result){
                                 //MessageToast.show(result);
-                                window.location=HOST + '/api/birthday/form'
+                                window.location=HOST + '/api/' + tableName + '/form'
                             },
                             error: function(){
                                 console.log("Download failed");
                             },
                             type: 'GET',
-                            url: HOST + '/api/birthday/form'
+                            url: HOST + '/api/' + tableName + '/form'
                         });
                         dialog.close();
                     }
@@ -192,6 +266,8 @@ sap.ui.define([
                 return;
             }
 
+            var oUiModel = this.getView().getModel("selectModel");
+            var tableName = oUiModel.getProperty("/table");
             var dialog = new sap.m.Dialog({
                 title: 'Confirm',
                 type: 'Message',
@@ -202,13 +278,13 @@ sap.ui.define([
                         $.ajax({
                             success: function(result){
                                 //MessageToast.show(result);
-                                window.location=HOST + '/api/birthday/export'
+                                window.location=HOST + '/api/' + tableName + '/export'
                             },
                             error: function(){
                                 console.log("Export failed");
                             },
                             type: 'GET',
-                            url: HOST + '/api/birthday/export'
+                            url: HOST + '/api/' + tableName + '/export'
                         });
                         dialog.close();
                     }
@@ -225,6 +301,43 @@ sap.ui.define([
             });
 
             dialog.open();
+        },
+
+        nextPage : function() {
+            if(this._currentPage < this._totalPage) {
+                this._currentPage ++;
+                var oUiModel = this.getView().getModel("selectModel");
+                var tableName = oUiModel.getProperty("/table");
+                this.tableModel = this.getTableData(tableName,this._currentPage);
+                this.getView().setModel(this.tableModel);
+                this.getView().byId("pageTextId").setText("Page "+ this._currentPage);
+            }
+        },
+
+        prevPage : function() {
+            if(this._currentPage > 1) {
+                this._currentPage --;
+                var oUiModel = this.getView().getModel("selectModel");
+                var tableName = oUiModel.getProperty("/table");
+                this.tableModel = this.getTableData(tableName,this._currentPage);
+                this.getView().setModel(this.tableModel);
+                this.getView().byId("pageTextId").setText("Page "+ this._currentPage);
+            }
+        },
+
+        handleComboboxChange : function() {
+            var combobox = this.getView().byId("combobox");
+            var selected = combobox.getSelectedKey();
+            var oUiModel = this.getView().getModel("selectModel");
+
+            if(selected == 0) {
+                oUiModel.setProperty("/table", "");
+            } else if(selected == 1) {
+                oUiModel.setProperty("/table", "birthday");
+            } else if(selected == 2) {
+                oUiModel.setProperty("/table", "survey");
+            }
+
         }
 
 	});

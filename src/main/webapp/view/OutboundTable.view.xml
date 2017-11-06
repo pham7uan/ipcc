@@ -9,28 +9,13 @@
         xmlns:c="sap.ui.core"
         xmlns:m="sap.m">
 
-    <m:Toolbar>
-        <m:Title text="{i18n>outboundListTitle}"/>
-        <m:ToolbarSpacer/>
-        <m:Button
-                id="btnDownload"
-                icon="sap-icon://download"
-                tooltip="Download sample excel file"
-                text="Get Import Form"
-                press="handleDownloadPress"/>
-    </m:Toolbar>
-
-    <m:HBox class="sapUiSmallMargin">
+    <m:HBox class="sapUiSmallMargin" justifyContent="Center">
         <m:Text text="Select Table" textAlign="Center" class="sapUiSmallMargin"/>
         <m:ComboBox
                 class="sapUiSmallMarginEnd"
                 id="combobox"
                 selectedKey="0"
-                items="{
-					path: '/OutboundTables',
-					sorter: { path: 'name' }
-				}">
-            <c:Item key="{id}" text="{name}" />
+                change="handleComboboxChange">
         </m:ComboBox>
 
         <u:FileUploader
@@ -38,7 +23,6 @@
                 id="fileUploader"
                 name="file"
                 uploadUrl="/api/{selectModel>/table}/import/"
-                width="400px"
                 tooltip="Import your file to the database"
                 uploadComplete="handleUploadComplete"
                 change="handleValueChange"
@@ -71,14 +55,226 @@
                 text="Import File"
                 press="handleUploadPress"/>
         <m:Button
+                class="sapUiSmallMarginEnd"
                 text="Export to Excel"
                 icon="sap-icon://excel-attachment"
                 tooltip="Export table data to excel file"
                 press="exportFile"/>
+        <m:Button
+                id="btnDownload"
+                icon="sap-icon://download"
+                tooltip="Download sample excel file"
+                text="Get Import Form"
+                press="handleDownloadPress"/>
     </m:HBox>
 
-    <m:TextArea id="result" growing="true" editable="false" value="" textAlign="Left" width="100%">
+    <m:TextArea id="result" growing="true" editable="false" value="" textAlign="Left" width="100%"
+                class="sapUiSmallMarginEnd">
 
     </m:TextArea>
 
+    <!-- Birthday Table -->
+    <Table id="table_birthday"
+           width="auto"
+           selectionMode="None"
+           enableCellFilter="{ui>/cellFilterOn}"
+           filter="filterGlobally"
+           inset="false"
+           ariaLabelledBy="title"
+           visibleRowCount="7"
+           rows="{
+			path: '/'
+		}">
+
+        <columns>
+            <Column
+                    hAlign="Center"
+                    width="4em"
+                    demandPopin="true">
+                <m:Label text="Id"/>
+                <template>
+                    <m:Text text="{id}" wrapping="false"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="businessUnit"
+                    filterProperty="businessUnit"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Tên đơn vị"/>
+                <template>
+                    <m:Text text="{businessUnit}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="customerId"
+                    filterProperty="customerId"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Mã KH"/>
+                <template>
+                    <m:Text text="{customerId}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="customerName"
+                    filterProperty="customerName"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Họ và tên KH"/>
+                <template>
+                    <m:Text text="{customerName}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="dateOfBirth"
+                    filterProperty="dateOfBirth"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Ngày sinh"/>
+                <template>
+                    <m:Text text="{dateOfBirth}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="monthOfBirth"
+                    filterProperty="monthOfBirth"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Tháng sinh"/>
+                <template>
+                    <m:Text text="{monthOfBirth}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="customerSegment"
+                    filterProperty="customerSegment"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Đối tượng KH"/>
+                <template>
+                    <m:Text text="{customerSegment}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="gift"
+                    filterProperty="gift"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Loại quà"/>
+                <template>
+                    <m:Text text="{gift}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="managerName"
+                    filterProperty="managerName"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="NV Quản lý"/>
+                <template>
+                    <m:Text text="{managerName}" wrapping="true"/>
+                </template>
+            </Column>
+        </columns>
+    </Table>
+
+    <!-- Survey Table -->
+    <Table id="table_survey"
+           width="auto"
+           visible="false"
+           selectionMode="None"
+           enableCellFilter="{ui>/cellFilterOn}"
+           filter="filterGlobally"
+           inset="false"
+           ariaLabelledBy="title"
+           visibleRowCount="7"
+           rows="{
+			path: '/'
+		}">
+
+        <columns>
+            <Column
+                    hAlign="Center"
+                    width="4em"
+                    demandPopin="true">
+                <m:Label text="Id"/>
+                <template>
+                    <m:Text text="{id}" wrapping="false"/>
+                </template>
+            </Column>
+
+            <Column
+                    sortProperty="customer_id"
+                    filterProperty="customer_id"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Mã KH"/>
+                <template>
+                    <m:Text text="{customer_id}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="customer_name"
+                    filterProperty="customer_name"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Họ và tên KH"/>
+                <template>
+                    <m:Text text="{customer_name}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="contact_info"
+                    filterProperty="contact_info"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Số điện thoại"/>
+                <template>
+                    <m:Text text="{contact_info}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="acctnbr"
+                    filterProperty="acctnbr"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="ACCTNBR"/>
+                <template>
+                    <m:Text text="{acctnbr}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="ten_cn_thuc_hien"
+                    filterProperty="ten_cn_thuc_hien"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Tên CN thực hiện"/>
+                <template>
+                    <m:Text text="{ten_cn_thuc_hien}" wrapping="true"/>
+                </template>
+            </Column>
+        </columns>
+    </Table>
+
+    <m:HBox class="sapUiSmallMarginTop" justifyContent="End">
+        <m:Button
+                class="sapUiSmallMarginEnd"
+                id="btnPrev"
+                icon="sap-icon://close-command-field"
+                tooltip="Previous"
+                press="prevPage"/>
+
+        <m:Button
+                class="sapUiSmallMarginEnd"
+                id="pageTextId"
+                text="Page 1"
+        />
+
+        <m:Button
+                id="btnNext"
+                icon="sap-icon://open-command-field"
+                tooltip="Next"
+                press="nextPage"/>
+    </m:HBox>
 </mvc:View>
