@@ -38,7 +38,7 @@ public class BirthdayController {
         Map<String,String> iResult = new HashMap<>();
         InputStream in = file.getInputStream();
         String log = "Import result\n";
-        String errorLog ="Import fail in: \n";
+        String errorLog ="";
         String log_form_err = "Import fail. Your excel file is not correct form.\nYou can get form by click Get form import";
         Integer numSuccess = 0;
         Integer numFail = 0;
@@ -53,7 +53,9 @@ public class BirthdayController {
             Sheet datatypeSheet = workbook.getSheetAt(0);
             int numOfRows=datatypeSheet.getPhysicalNumberOfRows();
             if (numOfRows < 3){
-                iResult.put("log",log_form_err);
+                iResult.put("error",log_form_err);
+                iResult.put("success","0");
+                iResult.put("fail","0");
                 iResult.put("pages","0");
                 return iResult;
             }
@@ -62,7 +64,9 @@ public class BirthdayController {
                 Row row=datatypeSheet.getRow(rowNum);
                 int numOfCellPerRow=row.getLastCellNum();
                 if (numOfCellPerRow !=13){
-                    iResult.put("log",log_form_err);
+                    iResult.put("error",log_form_err);
+                    iResult.put("success","0");
+                    iResult.put("fail","0");
                     iResult.put("pages","0");
                     return iResult;
                 }
@@ -83,7 +87,7 @@ public class BirthdayController {
 
                     } else {
                         if (notNullList.contains(cellNum)){
-                            errorLog = errorLog + " -Line "+rowNum + ". Column "+cellNum+" is null.\n";
+                            errorLog = errorLog + " -Line "+rowNum + ". Column "+cellNum+" is null.&";
                             validate = false;
                             numFail++;
                             break;
@@ -132,7 +136,9 @@ public class BirthdayController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            iResult.put("log",log_form_err);
+            iResult.put("error",log_form_err);
+            iResult.put("success","0");
+            iResult.put("fail","0");
             iResult.put("pages","0");
             return iResult;
         }
@@ -145,7 +151,9 @@ public class BirthdayController {
             log = log + errorLog;
         }
         int numPage = Util.getNumPage(import_list);
-        iResult.put("log",log);
+        iResult.put("error",errorLog);
+        iResult.put("success",Integer.toString(numSuccess));
+        iResult.put("fail",Integer.toString(numFail));
         iResult.put("pages",Integer.toString(numPage));
         return iResult;
 //        return log;
