@@ -165,7 +165,7 @@ public class SurveyController {
         FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
 
         // Set the content type and attachment header.
-        response.addHeader("Content-disposition", "attachment;filename=BirthdayCampaignForm.xlsx");
+        response.addHeader("Content-disposition", "attachment;filename=SurveyCampaignForm.xlsx");
         response.setContentType("application/ms-excel");
 
         // Copy the stream to the response's output stream.
