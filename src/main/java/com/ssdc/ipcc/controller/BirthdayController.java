@@ -8,7 +8,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -46,9 +45,9 @@ public class BirthdayController {
         Integer [] notNulls = {1,2,3,4,6,7,12};
         ArrayList<Integer> notNullList = new ArrayList<Integer>(Arrays.asList(notNulls));
 
-        String FILE_NAME = "birthday.xlsx";
+//        String FILE_NAME = "birthday_form.xlsx";
         try{
-            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+//            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
             Workbook workbook = new XSSFWorkbook(in);
             Sheet datatypeSheet = workbook.getSheetAt(0);
             int numOfRows=datatypeSheet.getPhysicalNumberOfRows();
@@ -178,7 +177,7 @@ public class BirthdayController {
     @GetMapping(path="/form") // Map ONLY GET Requests
     public void getDownload(HttpServletResponse response) throws IOException {
 
-        String FILE_NAME = "birthday.xlsx";
+        String FILE_NAME = "birthday_form.xlsx";
         FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
 
         // Set the content type and attachment header.

@@ -152,7 +152,7 @@ public class BirthdayExcelView extends AbstractExcelView{
 
             Cell c0 = row.createCell(0);
             c0.setCellStyle(style);
-            c0.setCellValue(i);
+            c0.setCellValue(i+1);
 
             Cell c1 = row.createCell(1);
             c1.setCellStyle(style);

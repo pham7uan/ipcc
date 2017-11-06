@@ -1,107 +1,181 @@
 package com.ssdc.ipcc.controller;
 
+import com.ssdc.ipcc.entities.Birthday;
+import com.ssdc.ipcc.entities.BirthdayRepository;
 import com.ssdc.ipcc.entities.Survey;
 import com.ssdc.ipcc.entities.SurveyRepository;
+import com.ssdc.ipcc.view.BirthdayExcelView;
 import com.ssdc.ipcc.view.MyExcelView;
 import com.ssdc.ipcc.common.Util;
 
+import com.ssdc.ipcc.view.SurveyExcelView;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
-@Controller    // This means that this class is a Controller
+@Controller
 @RequestMapping(path="/api/survey")
 public class SurveyController {
     @Autowired
     private SurveyRepository surveyRepository;
-
-    @GetMapping(path="/import") // Map ONLY GET Requests
+    private List<Survey> import_list = new LinkedList<>();
+    @PostMapping(path="/import")
     public @ResponseBody
-    String importSurvey() {
-        String FILE_NAME = "survey.xlsx";
+    Map<String,String> importSurvey(@RequestParam("file") MultipartFile file) throws IOException, JSONException {
+        import_list.clear();
+        Map<String,String> iResult = new HashMap<>();
+        InputStream in = file.getInputStream();
+        String errorLog ="";
+        String log_form_err = "Import fail. Your excel file is not correct form.\nYou can get form by click Get form import";
+        Integer numSuccess = 0;
+        Integer numFail = 0;
+        Integer total =0;
+        Integer [] notNulls = {1,2,3,5,6};
+        Integer [] strings = {1,3,4,5};
+        ArrayList<Integer> notNullList = new ArrayList<Integer>(Arrays.asList(notNulls));
+        ArrayList<Integer> stringsList = new ArrayList<Integer>(Arrays.asList(strings));
+//        String FILE_NAME = "survey_form.xlsx";
         try{
-            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
-            Workbook workbook = new XSSFWorkbook(excelFile);
+//            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+            Workbook workbook = new XSSFWorkbook(in);
             Sheet datatypeSheet = workbook.getSheetAt(0);
-            Iterator<Row> iterator = datatypeSheet.iterator();
-            int row = 0;
-            while (iterator.hasNext()) {
-                Row currentRow = iterator.next();
-                Iterator<Cell> cellIterator = currentRow.iterator();
-                if (row >0){
-                    int col = 0;
-                    Object[] data = new Object[9];
-                    while (cellIterator.hasNext()) {
-                        if (col < 6) {//number column need to import
-                            Cell currentCell = cellIterator.next();
-                            if (currentCell.getCellType() == currentCell.CELL_TYPE_STRING) {
-                                data[col] = currentCell.getStringCellValue();
-                            } else if (currentCell.getCellType() == currentCell.CELL_TYPE_NUMERIC) {
-                                if (col == 1 || col ==3 || col ==4){
-                                    data[col] = Integer.toString((int)currentCell.getNumericCellValue());
-                                } else {
-                                    data[col] = (int)currentCell.getNumericCellValue();
-                                }
+            int numOfRows=datatypeSheet.getPhysicalNumberOfRows();
+            if (numOfRows < 2){
+                iResult.put("pages","0");
+                iResult.put("error",log_form_err);
+                iResult.put("success","0");
+                iResult.put("fail","0");
+                return iResult;
+            }
+            total = numOfRows -1;
+            for(int rowNum=1;rowNum<numOfRows;rowNum++){
+                Row row=datatypeSheet.getRow(rowNum);
+                int numOfCellPerRow=row.getLastCellNum();
+                if (numOfCellPerRow !=7){
+                    iResult.put("pages","0");
+                    iResult.put("error",log_form_err);
+                    iResult.put("success","0");
+                    iResult.put("fail","0");
+                    return iResult;
+                }
+                Object[] data = new Object[9];
+                boolean validate = true;
+                for(int cellNum=0;cellNum<numOfCellPerRow;cellNum++){
+                    Cell currentCell=row.getCell(cellNum);
+                    if (currentCell != null){
+                        if (currentCell.getCellType() == currentCell.CELL_TYPE_STRING) {
+                            data[cellNum] = currentCell.getStringCellValue();
+                        } else if (currentCell.getCellType() == currentCell.CELL_TYPE_NUMERIC) {
+                            if (stringsList.contains(cellNum)){
+                                data[cellNum] = Integer.toString((int)currentCell.getNumericCellValue());
+                            } else {
+                                data[cellNum] = (int)currentCell.getNumericCellValue();
                             }
                         }
-                        col ++;
+
+                    } else {
+                        if (notNullList.contains(cellNum)){
+                            errorLog = errorLog + " -Line "+rowNum + ". Column "+cellNum+" is null.&";
+                            validate = false;
+                            numFail++;
+                            break;
+                        }
                     }
-//                    List<Survey> existRecords = surveyRepository.findByCustomer_id((String)data[1]);
-//                    if (existRecords.size() > 0){
-//                        data[6] = 1;
-//                        data[7] = existRecords.size();
-//                    }
-                    data[6] =1;
-                    data[7] =0;
-                    data[8] = Util.getCurrentDateTime();
+                }
+
+                if (!validate){
+                    System.out.println(errorLog);
+                    continue;
+                }
+                int maxChainId = surveyRepository.getMaxChaniId();
+                long record_id = surveyRepository.getMaxRecordId() + 1;
+                data[0] =  record_id;
+
+                if (data[3] != null && data[4] != null){
+                    data[7] =maxChainId +1;
+                    data[8] =0;
+                    Survey s = new Survey(data);
+                    surveyRepository.save(s);
+                    data[0] = (Long)data[0] +1;
+                    data[3] = data[4];
+                    data[8] = (Integer)data[8] +1;
+                    Survey s2 = new Survey(data);
+                    surveyRepository.save(s2);
+                } else {
+                    data[7] =maxChainId +1;
+                    data[8] =0;
                     Survey s = new Survey(data);
                     surveyRepository.save(s);
                 }
-                row++;
+                Survey b = surveyRepository.findOne(record_id);
+                import_list.add(b);
+                numSuccess++;
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            iResult.put("pages","0");
+            iResult.put("error",log_form_err);
+            iResult.put("success","0");
+            iResult.put("fail","0");
+            return iResult;
         }
-        return "imported";
+
+        int numPage = Util.getNumPage(import_list);
+        iResult.put("pages",Integer.toString(numPage));
+        iResult.put("error",errorLog);
+        iResult.put("success",Integer.toString(numSuccess));
+        iResult.put("fail",Integer.toString(numFail));
+        return iResult;
+//        return log;
     }
 
-    @GetMapping(path = "/export")
-    public ModelAndView getMyData(HttpServletRequest request, HttpServletResponse response) throws SQLException {
+    @GetMapping(path="/export") // Map ONLY GET Requests
+    public @ResponseBody
+    ModelAndView getResult (HttpServletRequest request, HttpServletResponse response) {
+        Map<Integer,Survey> surveyData = new HashMap<Integer,Survey>();
+        Iterable<Survey> surveys = surveyRepository.findAll();
+        int stt =0;
+        for (Survey b:surveys){
+            surveyData.put(stt,b);
+            stt++;
+        }
 
-        Map<String,String> revenueData = new HashMap<String,String>();
-        revenueData.put("Jan-2010", "$100,000,000");
-        revenueData.put("Feb-2010", "$110,000,000");
-        revenueData.put("Mar-2010", "$130,000,000");
-        revenueData.put("Apr-2010", "$140,000,000");
-        revenueData.put("May-2010", "$200,000,000");
         response.setContentType( "application/ms-excel" );
-        response.setHeader( "Content-disposition", "attachment; filename=myfile.xls" );
-        return new ModelAndView(new MyExcelView(),"revenueData",revenueData);
+        response.setHeader( "Content-disposition", "attachment; filename=SurveyCampaign.xls" );
+        return new ModelAndView(new SurveyExcelView(),"surveyData",surveyData);
     }
 
+    @GetMapping(path="/form") // Map ONLY GET Requests
+    public void getDownload(HttpServletResponse response) throws IOException {
+
+        String FILE_NAME = "survey_form.xlsx";
+        FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
+
+        // Set the content type and attachment header.
+        response.addHeader("Content-disposition", "attachment;filename=BirthdayCampaignForm.xlsx");
+        response.setContentType("application/ms-excel");
+
+        // Copy the stream to the response's output stream.
+        IOUtils.copy(excelFile, response.getOutputStream());
+        response.flushBuffer();
+    }
 
     @GetMapping(path="/all")
     @ResponseBody
-    public Iterable<Survey> search() {
-        return surveyRepository.findAll();
+    public List<Survey> search(@RequestParam(value = "page") int page ) {
+        return Util.PaginationList(import_list,page);
     }
 }
