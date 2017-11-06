@@ -150,6 +150,13 @@ public class BirthdayExcelView extends AbstractExcelView{
             HSSFRow row = sheet.createRow(rowNum++);
             Birthday birthday = revenueData.get(i);
 
+//            if (i<revenueData.size()-1){
+//                Birthday birthday2 = revenueData.get(i+1);
+//                if (birthday.getChainid() == birthday2.getChainid()){
+//                    i++;
+//                }
+//            }
+
             Cell c0 = row.createCell(0);
             c0.setCellStyle(style);
             c0.setCellValue(i+1);

@@ -186,12 +186,12 @@ public class Birthday {
         this.chain_n = chain_n;
     }
 
-    public int getDateOfBrith() {
+    public int getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBrith(int dateOfBrith) {
-        this.dateOfBirth = dateOfBrith;
+    public void setDateOfBirth(int dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public int getMonthOfBirth() {
