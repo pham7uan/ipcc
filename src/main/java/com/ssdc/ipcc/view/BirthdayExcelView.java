@@ -147,15 +147,15 @@ public class BirthdayExcelView extends AbstractExcelView{
         int rowNum = 2;
         System.out.println(revenueData.size());
         for (int i=0; i< revenueData.size(); i++){
-            HSSFRow row = sheet.createRow(rowNum++);
             Birthday birthday = revenueData.get(i);
+            if (i>0){
+                Birthday birthday2 = revenueData.get(i-1);
+                if (birthday.getChainid() == birthday2.getChainid()){
+                    continue;
+                }
+            }
+            HSSFRow row = sheet.createRow(rowNum++);
 
-//            if (i<revenueData.size()-1){
-//                Birthday birthday2 = revenueData.get(i+1);
-//                if (birthday.getChainid() == birthday2.getChainid()){
-//                    i++;
-//                }
-//            }
 
             Cell c0 = row.createCell(0);
             c0.setCellStyle(style);
