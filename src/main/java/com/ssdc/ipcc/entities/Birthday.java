@@ -30,7 +30,7 @@ public class Birthday {
     private int chainid;
     private int chain_n;
     @Column(name="date_of_birth")
-    private int dateOfBrith;
+    private int dateOfBirth;
     @Column(name="month_of_birth")
     private int monthOfBirth;
     private String gift;
@@ -57,7 +57,7 @@ public class Birthday {
         this.customerId = (String) data[2];
         this.customerName = (String) data[3];
         this.contactInfo= (String) data[4];
-        this.dateOfBrith = (Integer) data[6];
+        this.dateOfBirth = (Integer) data[6];
         this.monthOfBirth = (Integer) data[7];
         this.customerSegment = (String) data[8];
         this.gift = (String) data[10];
@@ -187,11 +187,11 @@ public class Birthday {
     }
 
     public int getDateOfBrith() {
-        return dateOfBrith;
+        return dateOfBirth;
     }
 
     public void setDateOfBrith(int dateOfBrith) {
-        this.dateOfBrith = dateOfBrith;
+        this.dateOfBirth = dateOfBrith;
     }
 
     public int getMonthOfBirth() {
