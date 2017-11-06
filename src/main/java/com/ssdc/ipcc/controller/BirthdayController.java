@@ -7,6 +7,8 @@ import com.ssdc.ipcc.view.BirthdayExcelView;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +33,9 @@ public class BirthdayController {
     private List<Birthday> import_list = new LinkedList<>();
     @PostMapping(path="/import") // Map ONLY GET Requests
     public @ResponseBody
-    String importBirthday(@RequestParam("file") MultipartFile file) throws IOException {
+    Map<String,String> importBirthday(@RequestParam("file") MultipartFile file) throws IOException, JSONException {
         import_list.clear();
+        Map<String,String> iResult = new HashMap<>();
         InputStream in = file.getInputStream();
         String log = "Import result\n";
         String errorLog ="Import fail in: \n";
@@ -50,14 +53,18 @@ public class BirthdayController {
             Sheet datatypeSheet = workbook.getSheetAt(0);
             int numOfRows=datatypeSheet.getPhysicalNumberOfRows();
             if (numOfRows < 3){
-                return log_form_err;
+                iResult.put("log",log_form_err);
+                iResult.put("pages","0");
+                return iResult;
             }
             total = numOfRows -2;
             for(int rowNum=2;rowNum<numOfRows;rowNum++){
                 Row row=datatypeSheet.getRow(rowNum);
                 int numOfCellPerRow=row.getLastCellNum();
                 if (numOfCellPerRow !=13){
-                    return log_form_err;
+                    iResult.put("log",log_form_err);
+                    iResult.put("pages","0");
+                    return iResult;
                 }
                 Object[] data = new Object[15];
                 boolean validate = true;
@@ -107,64 +114,27 @@ public class BirthdayController {
                     data[13] =maxChainId +1;
                     data[14] =0;
                     Birthday s = new Birthday(data);
-//                    for (int i =0; i<15;i++){
-//                        System.out.println("object "+i+" :"+data[i]);
-//                    }
-                        birthdayRepository.save(s);
+                    birthdayRepository.save(s);
                     data[0] = (Long)data[0] +1;
                     data[4] = data[5];
                     data[14] = (Integer)data[14] +1;
                     Birthday s2 = new Birthday(data);
-//                    for (int i =0; i<15;i++){
-//                        System.out.println("object "+i+" :"+data[i]);
-//                    }
-                        birthdayRepository.save(s2);
+                    birthdayRepository.save(s2);
                 } else {
                     data[13] =maxChainId +1;
                     data[14] =0;
                     Birthday s = new Birthday(data);
-//                    for (int i =0; i<15;i++){
-//                        System.out.println("object "+i+" :"+data[i]);
-//                    }
-                        birthdayRepository.save(s);
+                    birthdayRepository.save(s);
                 }
                 Birthday b = birthdayRepository.findOne(record_id);
                 import_list.add(b);
                 numSuccess++;
             }
-//            Iterator<Row> iterator = datatypeSheet.iterator();
-//            int row = 0;
-//            while (iterator.hasNext()) {
-//                Row currentRow = iterator.next();
-//                Iterator<Cell> cellIterator = currentRow.iterator();
-//                if (row >1){
-//                    int col = 0;
-//                    Object[] data = new Object[15];
-//                    while (cellIterator.hasNext()) {
-//                        if (col < 13) {//number column need to import
-//                            Cell currentCell = cellIterator.next();
-//                            if (currentCell.getCellTypeEnum() == CellType.STRING) {
-//                                data[col] = currentCell.getStringCellValue();
-////                                System.out.println("string "+col+": "+currentCell.getStringCellValue());
-//                            } else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
-//                                if (col == 2 || col ==4 || col ==5){
-//                                    data[col] = Integer.toString((int)currentCell.getNumericCellValue());
-//                                } else {
-//                                    data[col] = (int)currentCell.getNumericCellValue();
-//                                }
-//                            }
-//                        }
-//                        col ++;
-//                    }
-//
-//
-//
-//                }
-//                row++;
-//            }
         } catch (Exception e) {
             e.printStackTrace();
-            return log_form_err;
+            iResult.put("log",log_form_err);
+            iResult.put("pages","0");
+            return iResult;
         }
 //        catch (IOException e) {
 //            e.printStackTrace();
@@ -174,7 +144,11 @@ public class BirthdayController {
         if (numFail>0){
             log = log + errorLog;
         }
-        return log;
+        int numPage = Util.getNumPage(import_list);
+        iResult.put("log",log);
+        iResult.put("pages",Integer.toString(numPage));
+        return iResult;
+//        return log;
     }
 
     @GetMapping(path="/export") // Map ONLY GET Requests
@@ -210,33 +184,7 @@ public class BirthdayController {
 
     @GetMapping(path="/all")
     @ResponseBody
-    public List<Birthday> search(@RequestParam(value = "size") int size,@RequestParam(value = "page") int page ) {
-//        List<Birthday> p = new LinkedList<>();
-//        int numPage=0;
-//        if (import_list.size()%size > 0){
-//            numPage = import_list.size()/size +1;
-//        } else  {
-//            numPage = import_list.size()/size;
-//        }
-//        if (page <0 || page>numPage){
-//            return null;
-//        }
-//        if (import_list.size() >size){
-//            if (page==1){
-//                p = import_list.subList(0,size-1);
-//                return p;
-//            } else if(page<numPage){
-//                p = import_list.subList(page*size - size,page*size);
-//                return p;
-//            } else if(page==numPage){
-//                p=import_list.subList(page*(size-1),import_list.size()-1);
-//                return p;
-//            }
-//        } else {
-//            return import_list;
-//        }
-//        return import_list;
-        return Util.PaginationList(import_list,size,page);
-
+    public List<Birthday> search(@RequestParam(value = "page") int page ) {
+        return Util.PaginationList(import_list,page);
     }
 }

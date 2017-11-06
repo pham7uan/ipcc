@@ -57,14 +57,10 @@ public class Util {
         return null;
     }
 
-    public static <T> List<T> PaginationList(List<T> list,int size,int page){
+    public static <T> List<T> PaginationList(List<T> list,int page){
         List<T> p;
-        int numPage=0;
-        if (list.size()%size > 0){
-            numPage = list.size()/size +1;
-        } else  {
-            numPage = list.size()/size;
-        }
+        int size =7;
+        int numPage= getNumPage(list);
         if (page <0 || page>numPage){
             return null;
         }
@@ -84,5 +80,16 @@ public class Util {
             return list;
         }
         return list;
+    }
+
+    public static <T> int getNumPage(List<T> list){
+        int size =7;
+        int numPage=0;
+        if (list.size()%size > 0){
+            numPage = list.size()/size +1;
+        } else  {
+            numPage = list.size()/size;
+        }
+        return numPage;
     }
 }
