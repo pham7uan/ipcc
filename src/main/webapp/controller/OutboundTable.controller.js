@@ -13,11 +13,17 @@ sap.ui.define([
     ], function(jQuery, Controller, JSONModel , Filter, FilterOperator, Dialog, Button, HTML, Export, ExportTypeCSV, MessageToast) {
 	"use strict";
 
-    var HOST = "http://localhost:8080"
+    var HOST = "http://localhost:"
 
 	return Controller.extend("sap.ui.ipcc.wt.controller.OutboundTable", {
 
 		onInit: function(oEvent) {
+
+            var configModel = new JSONModel({});
+            var url = jQuery.sap.getModulePath("sap.ui.demo.mock", "/config.json")
+            configModel.loadData(url, "", false);
+            this.getView().setModel(configModel, "config_model");
+            HOST += configModel.getData().port;
 
 			// create and set JSON Model
 			//this.oModel = new JSONModel(jQuery.sap.getModulePath("sap.ui.demo.mock", "/products.json"));

@@ -14,7 +14,7 @@ sap.ui.define([
 	"use strict";
 
     var _tableData = null;
-    var HOST = "http://localhost:8080"
+    var HOST = "http://localhost:"
 
 	var ListController = Controller.extend("sap.ui.ipcc.wt.controller.VoiceTable", {
 
@@ -22,6 +22,12 @@ sap.ui.define([
 
 			// create and set JSON Model
 			//this.oModel = new JSONModel(jQuery.sap.getModulePath("sap.ui.demo.mock", "/products.json"));
+			var configModel = new JSONModel({});
+            var url = jQuery.sap.getModulePath("sap.ui.demo.mock", "/config.json")
+            configModel.loadData(url, "", false);
+            this.getView().setModel(configModel, "config_model");
+            HOST += configModel.getData().port;
+
 			this.oModel = this.initValue();
 			this.getView().setModel(this.oModel);
 
@@ -55,6 +61,10 @@ sap.ui.define([
                     })
                 }
             }, table);
+
+            // host
+            this.hostModel = this.getHostAddress();
+            this.getView().setModel(this.hostModel, "host_model");
 		},
 
 		initValue(){
@@ -78,6 +88,21 @@ sap.ui.define([
 
             return oModel;
 		},
+
+		getHostAddress(){
+            var oModel = new JSONModel();
+            jQuery.ajax({url: HOST + "/api/voicemail/gethost",
+                success: function(oData){
+                    oModel.setData({host_address: oData});
+                },
+
+                error: function () {
+                    jQuery.sap.log.error("failed");
+                }
+            });
+
+            return oModel;
+        },
 
 		onExit : function() {
 			// destroy the model

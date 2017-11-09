@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URL;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -176,16 +177,12 @@ public class BirthdayController {
 
     @GetMapping(path="/form") // Map ONLY GET Requests
     public void getDownload(HttpServletResponse response) throws IOException {
-
-        String FILE_NAME = "birthday_form.xlsx";
-        FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
-
-        // Set the content type and attachment header.
+        InputStream input = new URL("http://localhost:8080/birthday_form.xlsx").openStream();
         response.addHeader("Content-disposition", "attachment;filename=BirthdayCampaignForm.xlsx");
         response.setContentType("application/ms-excel");
 
         // Copy the stream to the response's output stream.
-        IOUtils.copy(excelFile, response.getOutputStream());
+        IOUtils.copy(input, response.getOutputStream());
         response.flushBuffer();
     }
 
