@@ -7,7 +7,7 @@ sap.ui.define([
         onOpenVoiceListPage : function() {
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
             oRouter.navTo("voicelist");
-        }
+        },
 
         onOpenOutboundPage : function() {
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
