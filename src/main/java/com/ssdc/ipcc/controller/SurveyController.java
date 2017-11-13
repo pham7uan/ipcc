@@ -15,6 +15,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.codehaus.jettison.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,12 +24,19 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
 
 @Controller
 @RequestMapping(path="/api/survey")
 public class SurveyController {
+    @Value("${voice_mail_host}")
+    private String host;
+    @Value("${server.port}")
+    private String port;
+    @Value("${app_name}")
+    private String app_name;
     @Autowired
     private SurveyRepository surveyRepository;
     private List<Survey> import_list = new LinkedList<>();
@@ -161,15 +169,13 @@ public class SurveyController {
     @GetMapping(path="/form") // Map ONLY GET Requests
     public void getDownload(HttpServletResponse response) throws IOException {
 
-        String FILE_NAME = "survey_form.xlsx";
-        FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
-
-        // Set the content type and attachment header.
+        String url = "http://localhost:" + port +"/"+app_name+"/survey_form.xlsx";
+        InputStream input = new URL(url).openStream();
         response.addHeader("Content-disposition", "attachment;filename=SurveyCampaignForm.xlsx");
         response.setContentType("application/ms-excel");
 
         // Copy the stream to the response's output stream.
-        IOUtils.copy(excelFile, response.getOutputStream());
+        IOUtils.copy(input, response.getOutputStream());
         response.flushBuffer();
     }
 

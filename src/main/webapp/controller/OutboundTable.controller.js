@@ -23,7 +23,7 @@ sap.ui.define([
             var url = jQuery.sap.getModulePath("sap.ui.demo.mock", "/config.json")
             configModel.loadData(url, "", false);
             this.getView().setModel(configModel, "config_model");
-            HOST += configModel.getData().port;
+            HOST = configModel.getData().backend;
 
 			// create and set JSON Model
 			//this.oModel = new JSONModel(jQuery.sap.getModulePath("sap.ui.demo.mock", "/products.json"));

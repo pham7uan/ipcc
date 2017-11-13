@@ -26,7 +26,7 @@ sap.ui.define([
             var url = jQuery.sap.getModulePath("sap.ui.demo.mock", "/config.json")
             configModel.loadData(url, "", false);
             this.getView().setModel(configModel, "config_model");
-            HOST += configModel.getData().port;
+            HOST = configModel.getData().backend;
 
 			this.oModel = this.initValue();
 			this.getView().setModel(this.oModel);
@@ -69,6 +69,7 @@ sap.ui.define([
 
 		initValue(){
 		    var oModel = new JSONModel();
+		    console.log(HOST)
 		    jQuery.ajax({url: HOST + "/api/voicemail/all?search",
                 dataType: "json",
                 success: function(oData){
