@@ -35,6 +35,7 @@ public class VoiceMailController {
     private VoiceMailRepository voiceMailRepository;
     private Map<Integer, JSONObject> voiceMailData = new HashMap<Integer, JSONObject>();
 
+    @CrossOrigin
     @GetMapping(path = "/update") // Map ONLY GET Requests
     public @ResponseBody
     String updateVoidMail(@RequestParam int id, @RequestParam String isSeen, @RequestParam String note) {
@@ -54,6 +55,7 @@ public class VoiceMailController {
         return "Updated";
     }
 
+    @CrossOrigin
     @PostMapping(path = "/export") // Map ONLY POST Requests
     public ModelAndView getMyData(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, JSONException {
         String data = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
@@ -71,6 +73,7 @@ public class VoiceMailController {
         return null;
     }
 
+    @CrossOrigin
     @GetMapping(path = "/result") // Map ONLY GET Requests
     public @ResponseBody
     ModelAndView getResult(HttpServletRequest request, HttpServletResponse response) {
@@ -79,6 +82,7 @@ public class VoiceMailController {
         return new ModelAndView(new VoiceMailExcelView(), "voiceMailData", voiceMailData);
     }
 
+    @CrossOrigin
     @GetMapping(path = "/all")
     @ResponseBody
     public List<VoiceMail> search(@RequestParam(value = "search") String search) {
@@ -108,12 +112,14 @@ public class VoiceMailController {
         return voiceMailRepository.findAll(spec);
     }
 
+    @CrossOrigin
     @GetMapping(path = "/gethost") // Map ONLY GET Requests
     public @ResponseBody
     String getHost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         return host;
     }
 
+    @CrossOrigin
     @GetMapping(path = "/getport") // Map ONLY GET Requests
     public @ResponseBody
     String getPort(HttpServletRequest request, HttpServletResponse response) throws IOException {

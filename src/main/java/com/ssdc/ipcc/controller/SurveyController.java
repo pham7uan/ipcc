@@ -40,6 +40,7 @@ public class SurveyController {
     @Autowired
     private SurveyRepository surveyRepository;
     private List<Survey> import_list = new LinkedList<>();
+    @CrossOrigin
     @PostMapping(path="/import")
     public @ResponseBody
     Map<String,String> importSurvey(@RequestParam("file") MultipartFile file) throws IOException, JSONException {
@@ -150,6 +151,7 @@ public class SurveyController {
 //        return log;
     }
 
+    @CrossOrigin
     @GetMapping(path="/export") // Map ONLY GET Requests
     public @ResponseBody
     ModelAndView getResult (HttpServletRequest request, HttpServletResponse response) {
@@ -166,6 +168,7 @@ public class SurveyController {
         return new ModelAndView(new SurveyExcelView(),"surveyData",surveyData);
     }
 
+    @CrossOrigin
     @GetMapping(path="/form") // Map ONLY GET Requests
     public void getDownload(HttpServletResponse response) throws IOException {
 
@@ -179,6 +182,7 @@ public class SurveyController {
         response.flushBuffer();
     }
 
+    @CrossOrigin
     @GetMapping(path="/all")
     @ResponseBody
     public List<Survey> search(@RequestParam(value = "page") int page ) {
