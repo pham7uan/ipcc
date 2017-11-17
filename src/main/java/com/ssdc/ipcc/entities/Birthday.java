@@ -10,11 +10,11 @@ public class Birthday {
     @Column(name="record_id")
     private Long id;
 
-    @Column(name="business_unit")
+    @Column(name="BusinessUnit")
     private String businessUnit;
-    @Column(name="customer_id")
+    @Column(name="CustomerID")
     private String customerId;
-    @Column(name="customer_name")
+    @Column(name="CustomerName")
     private String customerName;
     @Column(name="contact_info")
     private String contactInfo;
@@ -29,24 +29,25 @@ public class Birthday {
     @Column(name="chain_id")
     private int chainid;
     private int chain_n;
-    @Column(name="date_of_birth")
+    @Column(name="DateOfBrith")
     private int dateOfBirth;
-    @Column(name="month_of_birth")
+    @Column(name="MonthOfBirth")
     private int monthOfBirth;
+    @Column(name="Gift")
     private String gift;
-    @Column(name="manager_name")
+    @Column(name="ManagerName")
     private String managerName;
-    @Column(name="customer_segment")
+    @Column(name="CustomerSegment")
     private String customerSegment;
     @Column(name="loyalty_qn_1")
     private String loyaltyQn1 ="0";
-    @Column(name="other_reason01")
+    @Column(name="OtherReason01")
     private String otherReason01 ="0";
-    @Column(name="other_reason02")
+    @Column(name="OtherReason02")
     private String otherReason02 ="0";
-    @Column(name="shiper_name")
+    @Column(name="ShiperName")
     private String shiperName ="0";
-    @Column(name="feedback")
+    @Column(name="Feedback")
     private String feedback ="0";
 
     public Birthday(){}

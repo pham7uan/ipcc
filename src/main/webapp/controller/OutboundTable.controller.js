@@ -145,8 +145,8 @@ sap.ui.define([
                     this.tableModel = this.getTableData(tableName,this._currentPage);
                     this.getView().setModel(this.tableModel);
                     this.getView().byId("pageTextId").setText("Page "+ this._currentPage);
-                    var rs = "+ Import Success: "+myJSON.success +
-                             "\n+ Import Fail: "+myJSON.fail;
+                    var rs = "+ Import Success: "+myJSON.success + "rows"+
+                             "\n+ Import Fail: "+myJSON.fail + "rows";
                     if(myJSON.error.length > 0)
                         rs+="\n+ Error: "+myJSON.error;
                     this.getView().byId("result").setValue("-- RESULT --\n\n" + rs);

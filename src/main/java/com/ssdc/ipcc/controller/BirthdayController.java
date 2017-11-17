@@ -127,25 +127,30 @@ public class BirthdayController {
                     data[14] =0;
                     Birthday s = new Birthday(data);
                     birthdayRepository.save(s);
+                    import_list.add(s);
                     data[0] = (Long)data[0] +1;
                     data[4] = data[5];
                     data[14] = (Integer)data[14] +1;
                     Birthday s2 = new Birthday(data);
                     birthdayRepository.save(s2);
+                    import_list.add(s2);
                 } else {
                     data[13] =maxChainId +1;
                     data[14] =0;
                     Birthday s = new Birthday(data);
                     birthdayRepository.save(s);
+                    import_list.add(s);
                 }
-                Birthday b = birthdayRepository.findOne(record_id);
-                import_list.add(b);
+//                Birthday b = birthdayRepository.findOne(record_id);
+//                import_list.add(b);
                 numSuccess++;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
             iResult.put("pages","0");
-            iResult.put("error",log_form_err);
+            iResult.put("error",errors.toString());
             iResult.put("success","0");
             iResult.put("fail","0");
             return iResult;
@@ -185,7 +190,13 @@ public class BirthdayController {
     @CrossOrigin
     @GetMapping(path="/form") // Map ONLY GET Requests
     public void getDownload(HttpServletResponse response) throws IOException {
-        String url = "http://localhost:" + port +"/"+app_name+"/birthday_form.xlsx";
+        String url ="";
+        if (app_name.isEmpty() || app_name == null){
+            url = "http://localhost:" + port +"/birthday_form.xlsx";
+        } else {
+            url = "http://localhost:" + port +"/"+app_name+"/birthday_form.xlsx";
+        }
+
         InputStream input = new URL(url).openStream();
         response.addHeader("Content-disposition", "attachment;filename=BirthdayCampaignForm.xlsx");
         response.setContentType("application/ms-excel");

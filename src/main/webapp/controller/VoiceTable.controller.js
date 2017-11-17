@@ -14,7 +14,7 @@ sap.ui.define([
 	"use strict";
 
     var _tableData = null;
-    var HOST = "http://localhost:"
+    var HOST = "";
 
 	var ListController = Controller.extend("sap.ui.ipcc.wt.controller.VoiceTable", {
 
@@ -27,6 +27,7 @@ sap.ui.define([
             configModel.loadData(url, "", false);
             this.getView().setModel(configModel, "config_model");
             HOST = configModel.getData().backend;
+            console.log(HOST);
 
 			this.oModel = this.initValue();
 			this.getView().setModel(this.oModel);
@@ -57,7 +58,7 @@ sap.ui.define([
                         var oSource = oEvent.getSource();
                         var oLength = oSource.getLength();
                         _tableData = oSource.aIndices;
-                        console.log(_tableData);
+                        // console.log(_tableData);
                     })
                 }
             }, table);
@@ -69,7 +70,7 @@ sap.ui.define([
 
 		initValue(){
 		    var oModel = new JSONModel();
-		    console.log(HOST)
+		    // console.log(HOST)
 		    jQuery.ajax({url: HOST + "/api/voicemail/all?search",
                 dataType: "json",
                 success: function(oData){
@@ -79,7 +80,7 @@ sap.ui.define([
                         temp.push(i);
                     }
                     _tableData = temp;
-                    console.log(_tableData);
+                    // console.log(_tableData);
                 },
 
                 error: function () {
@@ -222,7 +223,7 @@ sap.ui.define([
                         temp.push(i);
                     }
                     _tableData = temp;
-                    console.log(_tableData);
+                    // console.log(_tableData);
                 },
 
                 error: function () {
@@ -258,7 +259,7 @@ sap.ui.define([
             if(id != null) {
                 jQuery.ajax({url: HOST + "/api/voicemail/update?id="+id+"&isSeen=1&note=''",
                     success: function(oData){
-                        console.log(oData)
+                        // console.log(oData)
                         mainModel[index].status_agent_seen = "1";
                         model.refresh();
 
@@ -296,7 +297,7 @@ sap.ui.define([
                     press: function () {
                         jQuery.ajax({url: HOST + "/api/voicemail/update?id="+id+"&isSeen=0&note="+dataInput+"",
                             success: function(oData){
-                                console.log(oData)
+                                // console.log(oData)
                                 var dialog = new sap.m.Dialog({
                                     title: 'Success',
                                     type: 'Message',
@@ -359,7 +360,7 @@ sap.ui.define([
                         for(var i = 0; i < _tableData.length; i++) {
                             oExportData.push(oModelObject[_tableData[i]])
                         }
-                        console.log(oExportData);
+                        // console.log(oExportData);
                         if(oExportData.length == 0) {
                             MessageToast.show("No data to export!");
                             dialog.close();

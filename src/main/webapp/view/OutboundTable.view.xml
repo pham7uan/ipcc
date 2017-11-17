@@ -75,6 +75,7 @@
 
     <!-- Birthday Table -->
     <Table id="table_birthday"
+           visible="false"
            width="auto"
            selectionMode="None"
            enableCellFilter="{ui>/cellFilterOn}"

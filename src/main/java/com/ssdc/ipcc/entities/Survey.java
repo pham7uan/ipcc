@@ -8,11 +8,15 @@ public class Survey {
 //    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="record_id")
     private Long id;
+    @Column(name="CustomerID")
     private String customer_id;
+    @Column(name="CustomerName")
     private String customer_name;
     private String contact_info;
 //    private String contact_info2;
+@Column(name="ACCTNBR")
     private String acctnbr;
+    @Column(name="TEN_CN_THUCHIEN")
     private String ten_cn_thuc_hien;
     @Column(name="chain_id")
     private int chainid;
@@ -20,7 +24,9 @@ public class Survey {
     private String survey_qn_1;
     private String survey_qn_2;
     private String survey_qn_3;
+    @Column(name="Feedback")
     private String feedback="0";
+    @Column(name="Note")
     private String note;
 
     private int contact_info_type = 1;

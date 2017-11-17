@@ -118,25 +118,30 @@ public class SurveyController {
                     data[8] =0;
                     Survey s = new Survey(data);
                     surveyRepository.save(s);
+                    import_list.add(s);
                     data[0] = (Long)data[0] +1;
                     data[3] = data[4];
                     data[8] = (Integer)data[8] +1;
                     Survey s2 = new Survey(data);
                     surveyRepository.save(s2);
+                    import_list.add(s2);
                 } else {
                     data[7] =maxChainId +1;
                     data[8] =0;
                     Survey s = new Survey(data);
                     surveyRepository.save(s);
+                    import_list.add(s);
                 }
-                Survey b = surveyRepository.findOne(record_id);
-                import_list.add(b);
+//                Survey b = surveyRepository.findOne(record_id);
+//                import_list.add(b);
                 numSuccess++;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            StringWriter errors = new StringWriter();
+            e.printStackTrace(new PrintWriter(errors));
             iResult.put("pages","0");
-            iResult.put("error",log_form_err);
+            iResult.put("error",errors.toString());
             iResult.put("success","0");
             iResult.put("fail","0");
             return iResult;
