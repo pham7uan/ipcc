@@ -52,7 +52,7 @@ public class SurveyController {
         Integer numSuccess = 0;
         Integer numFail = 0;
         Integer total =0;
-        Integer [] notNulls = {1,2,3,5,6};
+        Integer [] notNulls = {1,2,5,6};
         Integer [] strings = {1,3,4,5};
         ArrayList<Integer> notNullList = new ArrayList<Integer>(Arrays.asList(notNulls));
         ArrayList<Integer> stringsList = new ArrayList<Integer>(Arrays.asList(strings));
@@ -104,7 +104,11 @@ public class SurveyController {
                         }
                     }
                 }
-
+                if (data[3] == null && data[4] == null){
+                    errorLog = errorLog + " -Line "+rowNum + ": Phone/Cellphone is empty, fill one.";
+                    validate = false;
+                    numFail++;
+                }
                 if (!validate){
                     System.out.println(errorLog);
                     continue;
@@ -128,10 +132,14 @@ public class SurveyController {
                 } else {
                     data[7] =maxChainId +1;
                     data[8] =0;
+                    if (data[3] == null){
+                        data[3] = data[4];
+                    }
                     Survey s = new Survey(data);
                     surveyRepository.save(s);
                     import_list.add(s);
                 }
+
 //                Survey b = surveyRepository.findOne(record_id);
 //                import_list.add(b);
                 numSuccess++;

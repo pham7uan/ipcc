@@ -51,7 +51,7 @@ public class BirthdayController {
         Integer numSuccess = 0;
         Integer numFail = 0;
         Integer total =0;
-        Integer [] notNulls = {1,2,3,4,6,7,12};
+        Integer [] notNulls = {1,2,3,6,7,12};
         ArrayList<Integer> notNullList = new ArrayList<Integer>(Arrays.asList(notNulls));
 
 //        String FILE_NAME = "birthday_form.xlsx";
@@ -85,7 +85,11 @@ public class BirthdayController {
                     Cell currentCell=row.getCell(cellNum);
                     if (currentCell != null){
                         if (currentCell.getCellType() == currentCell.CELL_TYPE_STRING) {
-                            data[cellNum] = currentCell.getStringCellValue();
+                            if (cellNum == 6 || cellNum==7){
+                                data[cellNum] = Integer.parseInt(currentCell.getStringCellValue());
+                            } else {
+                                data[cellNum] = currentCell.getStringCellValue();
+                            }
                         } else if (currentCell.getCellType() == currentCell.CELL_TYPE_NUMERIC) {
                             if (cellNum == 2 || cellNum ==4 || cellNum ==5){
                                 data[cellNum] = Integer.toString((int)currentCell.getNumericCellValue());
@@ -102,6 +106,12 @@ public class BirthdayController {
                             break;
                         }
                     }
+                }
+
+                if (data[4] == null && data[5] == null){
+                    errorLog = errorLog + " -Line "+rowNum + ": Phone number is empty";
+                    validate = false;
+                    numFail++;
                 }
 
                 if (!validate){
@@ -123,6 +133,7 @@ public class BirthdayController {
                     data[10] = "Hoa";
                 }
 
+
                 if (data[4] != null && data[5] != null){
                     data[13] =maxChainId +1;
                     data[14] =0;
@@ -138,6 +149,9 @@ public class BirthdayController {
                 } else {
                     data[13] =maxChainId +1;
                     data[14] =0;
+                    if (data[4] == null){
+                        data[4] = data[5];
+                    }
                     Birthday s = new Birthday(data);
                     birthdayRepository.save(s);
                     import_list.add(s);
