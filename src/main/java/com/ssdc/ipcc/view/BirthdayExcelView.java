@@ -32,23 +32,23 @@ public class BirthdayExcelView extends AbstractExcelView{
         style.setBorderRight(HSSFCellStyle.BORDER_THIN);
         style.setBorderTop(HSSFCellStyle.BORDER_THIN);
 
-        CellStyle style2 = workbook.createCellStyle();
-        style2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        style2.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-        style2.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        style2.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        style2.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
-        style2.setFillPattern(CellStyle.BIG_SPOTS);
+//        CellStyle style = workbook.createCellStyle();
+//        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+//        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderRight(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+//        style.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+//        style.setFillPattern(CellStyle.BIG_SPOTS);
 
-        CellStyle style3 = workbook.createCellStyle();
-        style3.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        style3.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        style3.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-        style3.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        style3.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        style3.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
-        style3.setFillPattern(CellStyle.BIG_SPOTS);
+//        CellStyle style = workbook.createCellStyle();
+//        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+//        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderRight(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+//        style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+//        style.setFillPattern(CellStyle.BIG_SPOTS);
 
         Cell cell0 = header.createCell(0);
         cell0.setCellStyle(style);
@@ -102,40 +102,40 @@ public class BirthdayExcelView extends AbstractExcelView{
         sheet.setColumnWidth(7, 7000);
 
         Cell cell8 = header.createCell(8);
-        cell8.setCellStyle(style2);
+        cell8.setCellStyle(style);
         cell8.setCellValue("Xác nhận việc nhận quà");
         sheet.addMergedRegion(new CellRangeAddress(0,0,8,10));
 
         Cell cell8_1 = header1.createCell(8);
-        cell8_1.setCellStyle(style2);
+        cell8_1.setCellStyle(style);
         cell8_1.setCellValue("Đã nhận");
 
         Cell cell8_2 = header1.createCell(9);
-        cell8_2.setCellStyle(style2);
+        cell8_2.setCellStyle(style);
         cell8_2.setCellValue("Chưa nhận");
         sheet.setColumnWidth(9, 3000);
 
         Cell cell8_3 = header1.createCell(10);
-        cell8_3.setCellStyle(style2);
+        cell8_3.setCellStyle(style);
         cell8_3.setCellValue("Khác");
 
         Cell cell11 = header.createCell(11);
-        cell11.setCellStyle(style3);
+        cell11.setCellStyle(style);
         cell11.setCellValue("Người giao quà");
         sheet.addMergedRegion(new CellRangeAddress(0,0,11,13));
 
 
         Cell cell11_1 = header1.createCell(11);
-        cell11_1.setCellStyle(style3);
+        cell11_1.setCellStyle(style);
         cell11_1.setCellValue("NV ACB");
 
         Cell cell11_2 = header1.createCell(12);
-        cell11_2.setCellStyle(style3);
+        cell11_2.setCellStyle(style);
         cell11_2.setCellValue("Không phải NV ACB");
         sheet.setColumnWidth(12, 4500);
 
         Cell cell11_3 = header1.createCell(13);
-        cell11_3.setCellStyle(style3);
+        cell11_3.setCellStyle(style);
         cell11_3.setCellValue("Khác");
 
         Cell cell14 = header.createCell(14);
@@ -173,55 +173,66 @@ public class BirthdayExcelView extends AbstractExcelView{
             c3.setCellStyle(style);
             Cell c4 = row.createCell(4);
             c4.setCellStyle(style);
-            if (birthday.getCustomerSegment().equals("KHUT")){
-                c3.setCellValue(birthday.getCustomerSegment());
-            } else {
-                c4.setCellValue(birthday.getCustomerSegment());
+            if (birthday.getCustomerSegment() !=null && !birthday.getCustomerSegment().isEmpty()){
+                if ("KHUT" == birthday.getCustomerSegment()){
+                    c3.setCellValue(birthday.getCustomerSegment());
+                } else {
+                    c4.setCellValue(birthday.getCustomerSegment());
+                }
             }
 
             Cell c5 = row.createCell(5);
             c5.setCellStyle(style);
             Cell c6 = row.createCell(6);
             c6.setCellStyle(style);
-            if (birthday.getGift().equals("Hoa")){
-                c5.setCellValue("x");
-            } else {
-                c6.setCellValue("x");
+            if (birthday.getGift() !=null && !birthday.getGift().isEmpty()){
+                if ("Hoa"==birthday.getGift()){
+                    c5.setCellValue("x");
+                } else {
+                    c6.setCellValue("x");
+                }
             }
+
 
             Cell c7 = row.createCell(7);
             c7.setCellStyle(style);
             c7.setCellValue(birthday.getManagerName());
 
             Cell c8 = row.createCell(8);
-            c8.setCellStyle(style2);
+            c8.setCellStyle(style);
             Cell c9 = row.createCell(9);
-            c9.setCellStyle(style2);
+            c9.setCellStyle(style);
             Cell c10 = row.createCell(10);
-            c10.setCellStyle(style2);
-            switch (birthday.getLoyaltyQn1()){
-                case "0": c8.setCellValue("x");
-                    break;
-                case "1": c9.setCellValue("x");
-                    break;
-                default: c10.setCellValue("x");
-                    break;
+            c10.setCellStyle(style);
+            if (birthday.getLoyaltyQn1() !=null && !birthday.getLoyaltyQn1().isEmpty()){
+                switch (birthday.getLoyaltyQn1()){
+                    case "0": c8.setCellValue("x");
+                        break;
+                    case "1": c9.setCellValue("x");
+                        break;
+                    default: c10.setCellValue("x");
+                        break;
+                }
             }
 
+
             Cell c11 = row.createCell(11);
-            c11.setCellStyle(style3);
+            c11.setCellStyle(style);
             Cell c12 = row.createCell(12);
-            c12.setCellStyle(style3);
+            c12.setCellStyle(style);
             Cell c13 = row.createCell(13);
-            c13.setCellStyle(style3);
-            switch (birthday.getShiperName()){
-                case "0": c11.setCellValue("x");
-                    break;
-                case "1": c12.setCellValue("x");
-                    break;
-                default: c13.setCellValue("x");
-                    break;
+            c13.setCellStyle(style);
+            if (birthday.getShiperName() !=null && !birthday.getShiperName().isEmpty()){
+                switch (birthday.getShiperName()){
+                    case "0": c11.setCellValue("x");
+                        break;
+                    case "1": c12.setCellValue("x");
+                        break;
+                    default: c13.setCellValue("x");
+                        break;
+                }
             }
+
 
             Cell c14 = row.createCell(14);
             c14.setCellStyle(style);

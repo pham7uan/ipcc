@@ -1,5 +1,6 @@
 package com.ssdc.ipcc.view;
 
+import com.ssdc.ipcc.common.Constants;
 import com.ssdc.ipcc.entities.Birthday;
 import com.ssdc.ipcc.entities.Survey;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -35,14 +36,14 @@ public class SurveyExcelView extends AbstractExcelView{
         style.setBorderRight(HSSFCellStyle.BORDER_THIN);
         style.setBorderTop(HSSFCellStyle.BORDER_THIN);
 
-        CellStyle style2 = workbook.createCellStyle();
-        style2.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-        style2.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-        style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-        style2.setBorderRight(HSSFCellStyle.BORDER_THIN);
-        style2.setBorderTop(HSSFCellStyle.BORDER_THIN);
-        style2.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
-        style2.setFillPattern(CellStyle.BIG_SPOTS);
+//        CellStyle style = workbook.createCellStyle();
+//        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+//        style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderRight(HSSFCellStyle.BORDER_THIN);
+//        style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+//        style.setFillForegroundColor(IndexedColors.LIGHT_GREEN.getIndex());
+//        style.setFillPattern(CellStyle.BIG_SPOTS);
 
 
         Cell cell0 = header.createCell(0);
@@ -88,45 +89,45 @@ public class SurveyExcelView extends AbstractExcelView{
         sheet.setColumnWidth(6, 7000);
 
         Cell cell7 = header.createCell(7);
-        cell7.setCellStyle(style2);
+        cell7.setCellStyle(style);
         cell7.setCellValue("Hài lòng với quy trình");
         sheet.addMergedRegion(new CellRangeAddress(0,0,7,8));
 
 
         Cell cell7_1 = header1.createCell(7);
-        cell7_1.setCellStyle(style2);
+        cell7_1.setCellStyle(style);
         cell7_1.setCellValue("Có");
 
         Cell cell7_2 = header1.createCell(8);
-        cell7_2.setCellStyle(style2);
+        cell7_2.setCellStyle(style);
         cell7_2.setCellValue("Không");
 
         Cell cell9 = header.createCell(9);
-        cell9.setCellStyle(style2);
+        cell9.setCellStyle(style);
         cell9.setCellValue("Hài lòng với thái độ nhân viên");
         sheet.addMergedRegion(new CellRangeAddress(0,0,9,10));
 
 
         Cell cell9_1 = header1.createCell(9);
-        cell9_1.setCellStyle(style2);
+        cell9_1.setCellStyle(style);
         cell9_1.setCellValue("Có");
 
         Cell cell9_2 = header1.createCell(10);
-        cell9_2.setCellStyle(style2);
+        cell9_2.setCellStyle(style);
         cell9_2.setCellValue("Không");
 
         Cell cell11 = header.createCell(11);
-        cell11.setCellStyle(style2);
+        cell11.setCellStyle(style);
         cell11.setCellValue("Chi phí phát sinh");
         sheet.addMergedRegion(new CellRangeAddress(0,0,11,12));
 
 
         Cell cell11_1 = header1.createCell(11);
-        cell11_1.setCellStyle(style2);
+        cell11_1.setCellStyle(style);
         cell11_1.setCellValue("Có");
 
         Cell cell11_2 = header1.createCell(12);
-        cell11_2.setCellStyle(style2);
+        cell11_2.setCellStyle(style);
         cell11_2.setCellValue("Không");
 
         Cell cell13 = header.createCell(13);
@@ -193,9 +194,9 @@ public class SurveyExcelView extends AbstractExcelView{
             c6.setCellValue(survey.getTen_cn_thuc_hien());
 
             Cell c7 = row.createCell(7);
-            c7.setCellStyle(style2);
+            c7.setCellStyle(style);
             Cell c8 = row.createCell(8);
-            c8.setCellStyle(style2);
+            c8.setCellStyle(style);
             if ("0" == survey.getSurvey_qn_1()){
                 c8.setCellValue("x");
             } else if ("1" == survey.getSurvey_qn_1()){
@@ -203,9 +204,9 @@ public class SurveyExcelView extends AbstractExcelView{
             }
 
             Cell c9 = row.createCell(9);
-            c9.setCellStyle(style2);
+            c9.setCellStyle(style);
             Cell c10 = row.createCell(10);
-            c10.setCellStyle(style2);
+            c10.setCellStyle(style);
             if ("0" == survey.getSurvey_qn_2()){
                 c10.setCellValue("x");
             } else if ("1" == survey.getSurvey_qn_2()){
@@ -213,9 +214,9 @@ public class SurveyExcelView extends AbstractExcelView{
             }
 
             Cell c11 = row.createCell(11);
-            c11.setCellStyle(style2);
+            c11.setCellStyle(style);
             Cell c12 = row.createCell(12);
-            c12.setCellStyle(style2);
+            c12.setCellStyle(style);
             if ("0" == survey.getSurvey_qn_3()){
                 c12.setCellValue("x");
             } else if ("1" == survey.getSurvey_qn_3()){
@@ -228,7 +229,10 @@ public class SurveyExcelView extends AbstractExcelView{
 
             Cell c14 = row.createCell(14);
             c14.setCellStyle(style);
-            c14.setCellValue(survey.getCall_result());
+            if (survey.getCall_result() > -1){
+                String callResult = Constants.call_result.get(survey.getCall_result());
+                c14.setCellValue(callResult);
+            }
 
             Cell c15 = row.createCell(15);
             c15.setCellStyle(style);

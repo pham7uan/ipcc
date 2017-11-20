@@ -44,7 +44,7 @@ public class BirthdayController {
     Map<String,String> importBirthday(@RequestParam("file") MultipartFile file) throws IOException, JSONException {
         import_list.clear();
         Map<String,String> iResult = new HashMap<>();
-        InputStream in = file.getInputStream();
+
         String log = "Import result\n";
         String errorLog ="";
         String log_form_err = "Import fail. Your excel file is not correct form.\nYou can get form by click Get form import";
@@ -56,6 +56,7 @@ public class BirthdayController {
 
 //        String FILE_NAME = "birthday_form.xlsx";
         try{
+            InputStream in = file.getInputStream();
 //            FileInputStream excelFile = new FileInputStream(new File(FILE_NAME));
             Workbook workbook = new XSSFWorkbook(in);
             Sheet datatypeSheet = workbook.getSheetAt(0);

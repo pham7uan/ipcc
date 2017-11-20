@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 
+import java.io.File;
+
 @SpringBootApplication
 public class IpccApplication extends SpringBootServletInitializer {
 
@@ -14,6 +16,12 @@ public class IpccApplication extends SpringBootServletInitializer {
 	}
 
 	public static void main(String[] args) {
+//		String path = "../outbound";
+//
+//		final File file = new File(path);
+//		file.setReadable(true, false);
+//		file.setExecutable(true, false);
+//		file.setWritable(true, false);
 		SpringApplication.run(IpccApplication.class, args);
 	}
 }
