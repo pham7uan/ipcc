@@ -174,7 +174,7 @@ public class BirthdayExcelView extends AbstractExcelView{
             Cell c4 = row.createCell(4);
             c4.setCellStyle(style);
             if (birthday.getCustomerSegment() !=null && !birthday.getCustomerSegment().isEmpty()){
-                if ("KHUT" == birthday.getCustomerSegment()){
+                if (birthday.getCustomerSegment().equals("KHUT")){
                     c3.setCellValue(birthday.getCustomerSegment());
                 } else {
                     c4.setCellValue(birthday.getCustomerSegment());
@@ -186,7 +186,7 @@ public class BirthdayExcelView extends AbstractExcelView{
             Cell c6 = row.createCell(6);
             c6.setCellStyle(style);
             if (birthday.getGift() !=null && !birthday.getGift().isEmpty()){
-                if ("Hoa"==birthday.getGift()){
+                if (birthday.getGift().equals("Hoa")){
                     c5.setCellValue("x");
                 } else {
                     c6.setCellValue("x");
@@ -206,11 +206,11 @@ public class BirthdayExcelView extends AbstractExcelView{
             c10.setCellStyle(style);
             if (birthday.getLoyaltyQn1() !=null && !birthday.getLoyaltyQn1().isEmpty()){
                 switch (birthday.getLoyaltyQn1()){
-                    case "0": c8.setCellValue("x");
+                    case "1": c8.setCellValue("x");
                         break;
-                    case "1": c9.setCellValue("x");
+                    case "0": c9.setCellValue("x");
                         break;
-                    default: c10.setCellValue("x");
+                    default: c10.setCellValue(birthday.getLoyaltyQn1());
                         break;
                 }
             }
@@ -224,11 +224,11 @@ public class BirthdayExcelView extends AbstractExcelView{
             c13.setCellStyle(style);
             if (birthday.getShiperName() !=null && !birthday.getShiperName().isEmpty()){
                 switch (birthday.getShiperName()){
-                    case "0": c11.setCellValue("x");
+                    case "1": c11.setCellValue("x");
                         break;
-                    case "1": c12.setCellValue("x");
+                    case "0": c12.setCellValue("x");
                         break;
-                    default: c13.setCellValue("x");
+                    default: c13.setCellValue(birthday.getShiperName());
                         break;
                 }
             }

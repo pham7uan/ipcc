@@ -43,11 +43,11 @@ public class VoiceMailController {
         builder.with("id", ":", id);
         Specification<VoiceMail> spec = builder.build();
         VoiceMail voiceMail = voiceMailRepository.findOne(spec);
-        if (isSeen == "1") {
+        if (isSeen.equals("1")) {
             voiceMail.setStatus_agent_seen("1");
             voiceMail.setAgent_seen_time(Util.getCurrentDateTime());
         }
-        if (!note.isEmpty() && note != "") {
+        if (!note.isEmpty() && !note.equals("")) {
             voiceMail.setAgent_note(note);
         }
 

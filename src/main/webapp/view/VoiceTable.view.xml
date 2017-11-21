@@ -108,7 +108,7 @@
                 <template>
                     <m:Button icon="sap-icon://media-play" app:mydata="{id}" app:mydataName="{customer_name}"
                               app:mydataDate="{date_record}"
-                              app:mydataLink="{host_model>/host_address}/voice_mail/{path_file_record}" press="clickLink"/>
+                              app:mydataLink="{host_model>/host_address}/{path_file_record}" press="clickLink"/>
                     <!--<m:Link text="Play"
                             target="_blank"
                             app:mydata="{id}" press="clickLink"

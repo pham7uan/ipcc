@@ -132,7 +132,7 @@ public class SurveyExcelView extends AbstractExcelView{
 
         Cell cell13 = header.createCell(13);
         cell13.setCellStyle(style);
-        cell13.setCellValue("Ý kiến khác");
+        cell13.setCellValue("Ý kiến khách hàng");
         sheet.addMergedRegion(new CellRangeAddress(0,1,13,13));
         sheet.setColumnWidth(13, 7000);
 
@@ -197,31 +197,42 @@ public class SurveyExcelView extends AbstractExcelView{
             c7.setCellStyle(style);
             Cell c8 = row.createCell(8);
             c8.setCellStyle(style);
-            if ("0" == survey.getSurvey_qn_1()){
-                c8.setCellValue("x");
-            } else if ("1" == survey.getSurvey_qn_1()){
-                c7.setCellValue("x");
+            if(survey.getSurvey_qn_1() !=null && !survey.getSurvey_qn_1().isEmpty()){
+                if (survey.getSurvey_qn_1().equals("0")){
+                    c8.setCellValue("x");
+                } else if (survey.getSurvey_qn_1().equals("1")){
+                    c7.setCellValue("x");
+                }
             }
+
 
             Cell c9 = row.createCell(9);
             c9.setCellStyle(style);
             Cell c10 = row.createCell(10);
             c10.setCellStyle(style);
-            if ("0" == survey.getSurvey_qn_2()){
-                c10.setCellValue("x");
-            } else if ("1" == survey.getSurvey_qn_2()){
-                c9.setCellValue("x");
+
+            if(survey.getSurvey_qn_2() !=null && !survey.getSurvey_qn_2().isEmpty()){
+                if (survey.getSurvey_qn_2().equals("0")){
+                    c10.setCellValue("x");
+                } else if (survey.getSurvey_qn_2().equals("1")){
+                    c9.setCellValue("x");
+                }
             }
+
 
             Cell c11 = row.createCell(11);
             c11.setCellStyle(style);
             Cell c12 = row.createCell(12);
             c12.setCellStyle(style);
-            if ("0" == survey.getSurvey_qn_3()){
-                c12.setCellValue("x");
-            } else if ("1" == survey.getSurvey_qn_3()){
-                c11.setCellValue("x");
+
+            if(survey.getSurvey_qn_3() !=null && !survey.getSurvey_qn_3().isEmpty()){
+                if (survey.getSurvey_qn_3().equals("0")){
+                    c12.setCellValue("x");
+                } else if (survey.getSurvey_qn_3().equals("1")){
+                    c11.setCellValue("x");
+                }
             }
+
 
             Cell c13 = row.createCell(13);
             c13.setCellStyle(style);
