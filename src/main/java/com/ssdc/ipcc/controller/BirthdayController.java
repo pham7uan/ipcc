@@ -50,6 +50,7 @@ public class BirthdayController {
         Integer [] notNulls = {1,2,3,6,7,12};
         ArrayList<Integer> notNullList = new ArrayList<Integer>(Arrays.asList(notNulls));
         fileName = file.getOriginalFilename();
+        String importTime = Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
 //        String FILE_NAME = "BirthdayCampaignForm.xlsx";
         try{
             InputStream in = file.getInputStream();
@@ -97,7 +98,7 @@ public class BirthdayController {
                     data[17]=0;
                 }
                 data[15] = fileName+"_"+Util.getCurrentDateTime("ddMMyyyy");
-                data[16] = Util.getCurrentDateTime("yyyy-MM-dd HH:mm");
+                data[16] = importTime;
 
                 reviewList.add(data);
 
@@ -243,5 +244,26 @@ public class BirthdayController {
     @ResponseBody
     public List<Birthday> search(@RequestParam(value = "page") int page ) {
         return Util.PaginationList(import_list,page);
+    }
+
+    @CrossOrigin
+    @GetMapping(path="/history")
+    @ResponseBody
+    public List<Object> getImportHistory() {
+        return birthdayRepository.findImportHistory();
+    }
+
+    @CrossOrigin
+    @GetMapping(path="/remove")
+    @ResponseBody
+    public String removeImport(@RequestParam(value = "filename") String filename,
+                                   @RequestParam(value = "date") String date) {
+        List<Long> ids= birthdayRepository.findByHisory(filename,date);
+        if (!ids.isEmpty()){
+            birthdayRepository.deleteByIdIn(ids);
+            return "Deleted";
+        }
+
+        return "Nothing deleted";
     }
 }

@@ -48,6 +48,7 @@ public class SurveyController {
     List<Object[]> reviewSurvey(@RequestParam("file") MultipartFile file) throws IOException {
         reviewList.clear();
         fileName = file.getOriginalFilename();
+        String importTime = Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
         InputStream in = file.getInputStream();
         Integer [] notNulls = {1,2,5,6};
         Integer [] strings = {1,3,4,5};
@@ -93,7 +94,7 @@ public class SurveyController {
                     data[11]=0;
                 }
                 data[9] = fileName+"_"+Util.getCurrentDateTime("ddMMyyyy");
-                data[10] = Util.getCurrentDateTime("yyyy-MM-dd HH:mm");
+                data[10] = importTime;
                 reviewList.add(data);
             }
         } catch (Exception e) {
@@ -214,5 +215,26 @@ public class SurveyController {
     @ResponseBody
     public List<Survey> search(@RequestParam(value = "page") int page ) {
         return Util.PaginationList(import_list,page);
+    }
+
+    @CrossOrigin
+    @GetMapping(path="/history")
+    @ResponseBody
+    public List<Object> getImportHistory() {
+        return surveyRepository.findImportHistory();
+    }
+
+    @CrossOrigin
+    @GetMapping(path="/remove")
+    @ResponseBody
+    public String removeImport(@RequestParam(value = "filename") String filename,
+                               @RequestParam(value = "date") String date) {
+        List<Long> ids= surveyRepository.findByHisory(filename,date);
+        if (!ids.isEmpty()){
+            surveyRepository.deleteByIdIn(ids);
+            return "Deleted";
+        }
+
+        return "Nothing deleted";
     }
 }
