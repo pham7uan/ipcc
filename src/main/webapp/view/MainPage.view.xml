@@ -2,17 +2,17 @@
         controllerName="sap.ui.ipcc.wt.controller.MainPage"
         xmlns="sap.m"
         xmlns:mvc="sap.ui.core.mvc">
-    <Page title="IPCC Outbound" enableScrolling="true" class="sapUiContentPadding">
+    <Page title="IPCC Voice Mail" enableScrolling="true" class="sapUiContentPadding">
         <headerContent>
 
         </headerContent>
         <content>
             <VBox class="sapUiSmallMargin">
-                <!--<Button-->
-                        <!--width="100%"-->
-                        <!--text="Open Voice Mail List Page"-->
-                        <!--tooltip="VoiceList Page"-->
-                        <!--press="onOpenVoiceListPage"/>-->
+                <Button
+                        width="100%"
+                        text="Open Voice Mail List Page"
+                        tooltip="VoiceList Page"
+                        press="onOpenVoiceListPage"/>
                 <Button
                         width="100%"
                         text="Open Outbound Page"

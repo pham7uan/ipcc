@@ -45,7 +45,7 @@ public class VoiceMailController {
         VoiceMail voiceMail = voiceMailRepository.findOne(spec);
         if (isSeen.equals("1")) {
             voiceMail.setStatus_agent_seen("1");
-            voiceMail.setAgent_seen_time(Util.getCurrentDateTime());
+            voiceMail.setAgent_seen_time(Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss"));
         }
         if (!note.isEmpty() && !note.equals("")) {
             voiceMail.setAgent_note(note);

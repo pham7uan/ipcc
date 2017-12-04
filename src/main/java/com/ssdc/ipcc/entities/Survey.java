@@ -2,7 +2,7 @@ package com.ssdc.ipcc.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "acbsurvey")
+@Table(name = "cc247survey")
 public class Survey {
     @Id
 //    @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,6 +38,11 @@ public class Survey {
     private int daily_till = 72000;
     private int tz_dbid = 111;
 
+    @Column(name="Contact_Campaign")
+    private String contactCampaign;
+    @Column(name="Date_Campaign")
+    private String dateCampaign;
+
     public Survey() {
     }
 
@@ -62,6 +67,8 @@ public class Survey {
         this.ten_cn_thuc_hien= (String) data[6];
         this.chainid= (Integer) data[7];
         this.chain_n= (Integer) data[8];
+        this.contactCampaign= (String) data[9];
+        this.dateCampaign = (String) data[10];
     }
 
     public Long getId() {
@@ -182,5 +189,21 @@ public class Survey {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getContactCampaign() {
+        return contactCampaign;
+    }
+
+    public void setContactCampaign(String contactCampaign) {
+        this.contactCampaign = contactCampaign;
+    }
+
+    public String getDateCampaign() {
+        return dateCampaign;
+    }
+
+    public void setDateCampaign(String dateCampaign) {
+        this.dateCampaign = dateCampaign;
     }
 }

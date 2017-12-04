@@ -3,7 +3,7 @@ package com.ssdc.ipcc.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "acbloyalty")
+@Table(name = "cc247loyalty")
 public class Birthday {
     @Id
 //    @GeneratedValue(strategy=GenerationType.AUTO)
@@ -49,6 +49,10 @@ public class Birthday {
     private String shiperName ="0";
     @Column(name="Feedback")
     private String feedback ="0";
+    @Column(name="Contact_Campaign")
+    private String contactCampaign;
+    @Column(name="Date_Campaign")
+    private String dateCampaign;
 
     public Birthday(){}
 
@@ -65,6 +69,8 @@ public class Birthday {
         this.managerName = (String) data[12];
         this.chainid = (Integer) data[13];
         this.chain_n = (Integer) data[14];
+        this.contactCampaign = (String) data[15];
+        this.dateCampaign = (String) data[16];
     }
 
     public Long getId() {
@@ -265,5 +271,21 @@ public class Birthday {
 
     public void setFeedback(String feedback) {
         this.feedback = feedback;
+    }
+
+    public String getContactCampaign() {
+        return contactCampaign;
+    }
+
+    public void setContactCampaign(String contactCampaign) {
+        this.contactCampaign = contactCampaign;
+    }
+
+    public String getDateCampaign() {
+        return dateCampaign;
+    }
+
+    public void setDateCampaign(String dateCampaign) {
+        this.dateCampaign = dateCampaign;
     }
 }

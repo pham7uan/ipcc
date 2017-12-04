@@ -40,18 +40,15 @@ public class SurveyController {
     @Autowired
     private SurveyRepository surveyRepository;
     private List<Survey> import_list = new LinkedList<>();
+    private List<Object[]> reviewList = new LinkedList<>();
+    private String fileName;
     @CrossOrigin
-    @PostMapping(path="/import")
+    @PostMapping(path="/review")
     public @ResponseBody
-    Map<String,String> importSurvey(@RequestParam("file") MultipartFile file) throws IOException, JSONException {
-        import_list.clear();
-        Map<String,String> iResult = new HashMap<>();
+    List<Object[]> reviewSurvey(@RequestParam("file") MultipartFile file) throws IOException {
+        reviewList.clear();
+        fileName = file.getOriginalFilename();
         InputStream in = file.getInputStream();
-        String errorLog ="";
-        String log_form_err = "Import fail. Your excel file is not correct form.\nYou can get form by click Get form import";
-        Integer numSuccess = 0;
-        Integer numFail = 0;
-        Integer total =0;
         Integer [] notNulls = {1,2,5,6};
         Integer [] strings = {1,3,4,5};
         ArrayList<Integer> notNullList = new ArrayList<Integer>(Arrays.asList(notNulls));
@@ -63,25 +60,16 @@ public class SurveyController {
             Sheet datatypeSheet = workbook.getSheetAt(0);
             int numOfRows=datatypeSheet.getPhysicalNumberOfRows();
             if (numOfRows < 2){
-                iResult.put("pages","0");
-                iResult.put("error",log_form_err);
-                iResult.put("success","0");
-                iResult.put("fail","0");
-                return iResult;
+                return reviewList;
             }
-            total = numOfRows -1;
             for(int rowNum=1;rowNum<numOfRows;rowNum++){
                 Row row=datatypeSheet.getRow(rowNum);
                 int numOfCellPerRow=row.getLastCellNum();
                 if (numOfCellPerRow !=7){
-                    iResult.put("pages","0");
-                    iResult.put("error",log_form_err);
-                    iResult.put("success","0");
-                    iResult.put("fail","0");
-                    return iResult;
+                    return reviewList;
                 }
-                Object[] data = new Object[9];
-                boolean validate = true;
+                Object[] data = new Object[12];
+                data[11]=1;
                 for(int cellNum=0;cellNum<numOfCellPerRow;cellNum++){
                     Cell currentCell=row.getCell(cellNum);
                     if (currentCell != null){
@@ -97,20 +85,49 @@ public class SurveyController {
 
                     } else {
                         if (notNullList.contains(cellNum)){
-                            errorLog = errorLog + " -Line "+rowNum + ". Column "+cellNum+" is null.&";
-                            validate = false;
-                            numFail++;
-                            break;
+                            data[11]=0;
                         }
                     }
                 }
                 if (data[3] == null && data[4] == null){
-                    errorLog = errorLog + " -Line "+rowNum + ": Phone/Cellphone is empty, fill one.";
+                    data[11]=0;
+                }
+                data[9] = fileName+"_"+Util.getCurrentDateTime("ddMMyyyy");
+                data[10] = Util.getCurrentDateTime("yyyy-MM-dd HH:mm");
+                reviewList.add(data);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return reviewList;
+        }
+        return reviewList;
+    }
+    @CrossOrigin
+    @GetMapping(path="/import")
+    public @ResponseBody
+    Map<String,String> importSurvey()  {
+        import_list.clear();
+        Map<String,String> iResult = new HashMap<>();
+        String errorLog ="";
+        Integer numSuccess = 0;
+        Integer numFail = 0;
+        Integer [] notNulls = {1,2,5,6};
+        try{
+            for(int i=0;i<reviewList.size();i++){
+                Object[] data = reviewList.get(i);
+                boolean validate = true;
+                for (int j=0; j<notNulls.length;j++){
+                    if (data[notNulls[j]] == null){
+                        errorLog = errorLog + " -Line "+i + ". Column "+notNulls[j]+" is null.&";
+                        validate = false;
+                    }
+                }
+                if (data[3] == null && data[4] == null){
+                    errorLog = errorLog + " -Line "+i + ": Phone/Cellphone is empty, fill one.";
                     validate = false;
-                    numFail++;
                 }
                 if (!validate){
-                    System.out.println(errorLog);
+                    numFail++;
                     continue;
                 }
                 int maxChainId = surveyRepository.getMaxChaniId();
@@ -139,9 +156,6 @@ public class SurveyController {
                     surveyRepository.save(s);
                     import_list.add(s);
                 }
-
-//                Survey b = surveyRepository.findOne(record_id);
-//                import_list.add(b);
                 numSuccess++;
             }
         } catch (Exception e) {
@@ -161,7 +175,7 @@ public class SurveyController {
         iResult.put("success",Integer.toString(numSuccess));
         iResult.put("fail",Integer.toString(numFail));
         return iResult;
-//        return log;
+
     }
 
     @CrossOrigin

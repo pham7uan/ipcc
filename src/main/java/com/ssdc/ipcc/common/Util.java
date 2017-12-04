@@ -15,8 +15,8 @@ import java.io.IOException;
 
 
 public class Util {
-    public static String getCurrentDateTime(){
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static String getCurrentDateTime(String pattern){
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
         dateFormat.setTimeZone(TimeZone.getTimeZone("Asia/Saigon"));
         Date date = new Date();
         return  dateFormat.format(date);
