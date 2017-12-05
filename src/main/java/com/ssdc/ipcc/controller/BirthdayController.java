@@ -110,7 +110,7 @@ public class BirthdayController {
         return reviewList;
     }
     @CrossOrigin
-    @PostMapping(path="/import")
+    @GetMapping(path="/import")
     public @ResponseBody
     Map<String,String> importBirthday() throws IOException, JSONException {
         import_list.clear();
