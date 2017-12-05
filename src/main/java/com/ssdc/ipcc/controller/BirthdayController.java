@@ -67,11 +67,12 @@ public class BirthdayController {
                     return null;
                 }
                 Object[] data = new Object[18];
-                data[17] = 1;
                 boolean validate = true;
+                data[17]="";
                 for(int cellNum=0;cellNum<numOfCellPerRow;cellNum++){
+                    int c = cellNum+1;
                     Cell currentCell=row.getCell(cellNum);
-                    if (currentCell != null){
+                    if (currentCell != null && currentCell.getCellType() != Cell.CELL_TYPE_BLANK){
                         if (currentCell.getCellType() == currentCell.CELL_TYPE_STRING) {
                             if (cellNum == 6 || cellNum==7){
                                 data[cellNum] = Integer.parseInt(currentCell.getStringCellValue());
@@ -88,14 +89,17 @@ public class BirthdayController {
 
                     } else {
                         if (notNullList.contains(cellNum)){
-                            data[17]=0;
+                            validate=false;
+                            data[17]+="Cột thứ "+ c +" bị trống.\n";
                         }
                     }
                 }
 
                 if (data[4] == null && data[5] == null){
-                    data[17]=0;
+                    validate=false;
+                    data[17]+="Cần ít nhất một số điện thoại.\n";
                 }
+                if (validate) { data[17] = "OK";}
                 reviewList.add(data);
 
             }
@@ -122,17 +126,19 @@ public class BirthdayController {
 //        ArrayList<Integer> notNullList = new ArrayList<Integer>(Arrays.asList(notNulls));
         try{
             for(int i=0;i<reviewList.size();i++){
+                int r = i+2;
                 Object[] data = reviewList.get(i);
                 boolean validate = true;
                 for (int j=0; j<notNulls.length;j++){
                     if (data[notNulls[j]] == null){
-                        errorLog = errorLog + " -Line "+i + ". Column "+notNulls[j]+" is null.&";
+                        int c = notNulls[j]+1;
+                        errorLog = errorLog + " -Dòng "+r + ". Cột thứ "+c+" bị trống.&";
                         validate = false;
                     }
                 }
 
                 if (data[4] == null && data[5] == null){
-                    errorLog = errorLog + " -Line "+i + ": Phone number is empty";
+                    errorLog = errorLog + " -Dòng "+r + ": Cần ít nhất một số điện thoại.";
                     validate = false;
                 }
 

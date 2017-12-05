@@ -69,10 +69,11 @@ public class SurveyController {
                     return null;
                 }
                 Object[] data = new Object[12];
-                data[11]=1;
+                boolean validate = true;
                 for(int cellNum=0;cellNum<numOfCellPerRow;cellNum++){
+                    int c = cellNum+1;
                     Cell currentCell=row.getCell(cellNum);
-                    if (currentCell != null){
+                    if (currentCell != null && currentCell.getCellType() != Cell.CELL_TYPE_BLANK){
                         if (currentCell.getCellType() == currentCell.CELL_TYPE_STRING) {
                             data[cellNum] = currentCell.getStringCellValue();
                         } else if (currentCell.getCellType() == currentCell.CELL_TYPE_NUMERIC) {
@@ -85,13 +86,17 @@ public class SurveyController {
 
                     } else {
                         if (notNullList.contains(cellNum)){
-                            data[11]=0;
+                            validate=false;
+                            data[11]="Cột thứ "+ c +" bị trống.\n";
                         }
                     }
                 }
                 if (data[3] == null && data[4] == null){
-                    data[11]=0;
+                    validate=false;
+                    data[11]="Cần ít nhất một số điện thoại";
                 }
+
+                if (validate){data[11]="OK";}
                 reviewList.add(data);
             }
         } catch (Exception e) {
@@ -114,16 +119,18 @@ public class SurveyController {
         Integer [] notNulls = {1,2,5,6};
         try{
             for(int i=0;i<reviewList.size();i++){
+                int r = i+2;
                 Object[] data = reviewList.get(i);
                 boolean validate = true;
                 for (int j=0; j<notNulls.length;j++){
                     if (data[notNulls[j]] == null){
-                        errorLog = errorLog + " -Line "+i + ". Column "+notNulls[j]+" is null.&";
+                        int c = notNulls[j]+1;
+                        errorLog = errorLog + " -Dòng "+r + ". Cột thứ "+c+" bị trống.&";
                         validate = false;
                     }
                 }
                 if (data[3] == null && data[4] == null){
-                    errorLog = errorLog + " -Line "+i + ": Phone/Cellphone is empty, fill one.";
+                    errorLog = errorLog + " -Dòng "+r + ": Cần ít nhất một số điện thoại.";
                     validate = false;
                 }
                 if (!validate){
