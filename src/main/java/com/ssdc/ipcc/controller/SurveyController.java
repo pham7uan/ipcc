@@ -61,13 +61,13 @@ public class SurveyController {
             Sheet datatypeSheet = workbook.getSheetAt(0);
             int numOfRows=datatypeSheet.getPhysicalNumberOfRows();
             if (numOfRows < 2){
-                return reviewList;
+                return null;
             }
             for(int rowNum=1;rowNum<numOfRows;rowNum++){
                 Row row=datatypeSheet.getRow(rowNum);
                 int numOfCellPerRow=row.getLastCellNum();
                 if (numOfCellPerRow !=7){
-                    return reviewList;
+                    return null;
                 }
                 Object[] data = new Object[12];
                 data[11]=1;
