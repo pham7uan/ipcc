@@ -48,7 +48,6 @@ public class SurveyController {
     List<Object[]> reviewSurvey(@RequestParam("file") MultipartFile file) throws IOException {
         reviewList.clear();
         fileName = file.getOriginalFilename();
-        String importTime = Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
         InputStream in = file.getInputStream();
         Integer [] notNulls = {1,2,5,6};
         Integer [] strings = {1,3,4,5};
@@ -93,8 +92,6 @@ public class SurveyController {
                 if (data[3] == null && data[4] == null){
                     data[11]=0;
                 }
-                data[9] = fileName+"_"+Util.getCurrentDateTime("ddMMyyyy");
-                data[10] = importTime;
                 reviewList.add(data);
             }
         } catch (Exception e) {
@@ -108,6 +105,8 @@ public class SurveyController {
     public @ResponseBody
     Map<String,String> importSurvey()  {
         import_list.clear();
+        String importTime = Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
+        String contact_campaign = fileName+"_"+Util.getCurrentDateTime("ddMMyyyy");
         Map<String,String> iResult = new HashMap<>();
         String errorLog ="";
         Integer numSuccess = 0;
@@ -134,7 +133,8 @@ public class SurveyController {
                 int maxChainId = surveyRepository.getMaxChaniId();
                 long record_id = surveyRepository.getMaxRecordId() + 1;
                 data[0] =  record_id;
-
+                data[9] = contact_campaign;
+                data[10] = importTime;
                 if (data[3] != null && data[4] != null){
                     data[7] =maxChainId +1;
                     data[8] =0;
@@ -175,6 +175,8 @@ public class SurveyController {
         iResult.put("error",errorLog);
         iResult.put("success",Integer.toString(numSuccess));
         iResult.put("fail",Integer.toString(numFail));
+        iResult.put("contact_campaign",contact_campaign);
+        iResult.put("date_campaign",importTime);
         return iResult;
 
     }

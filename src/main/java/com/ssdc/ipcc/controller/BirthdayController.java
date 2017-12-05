@@ -50,7 +50,6 @@ public class BirthdayController {
         Integer [] notNulls = {1,2,3,6,7,12};
         ArrayList<Integer> notNullList = new ArrayList<Integer>(Arrays.asList(notNulls));
         fileName = file.getOriginalFilename();
-        String importTime = Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
 //        String FILE_NAME = "BirthdayCampaignForm.xlsx";
         try{
             InputStream in = file.getInputStream();
@@ -97,9 +96,6 @@ public class BirthdayController {
                 if (data[4] == null && data[5] == null){
                     data[17]=0;
                 }
-                data[15] = fileName+"_"+Util.getCurrentDateTime("ddMMyyyy");
-                data[16] = importTime;
-
                 reviewList.add(data);
 
             }
@@ -115,7 +111,8 @@ public class BirthdayController {
     Map<String,String> importBirthday() throws IOException, JSONException {
         import_list.clear();
         Map<String,String> iResult = new HashMap<>();
-
+        String importTime = Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
+        String contact_campaign = fileName+"_"+Util.getCurrentDateTime("ddMMyyyy");
         String log = "Import result\n";
         String errorLog ="";
         Integer numSuccess = 0;
@@ -146,7 +143,8 @@ public class BirthdayController {
                 int maxChainId = birthdayRepository.getMaxChaniId();
                 long record_id = birthdayRepository.getMaxRecordId() + 1;
                 data[0] =  record_id;
-
+                data[15] = contact_campaign;
+                data[16] = importTime;
                 if (data[8] == null){
                     data[8] = data[9];
                 }
@@ -156,7 +154,6 @@ public class BirthdayController {
                 } else {
                     data[10] = "Hoa";
                 }
-
 
                 if (data[4] != null && data[5] != null){
                     data[13] =maxChainId +1;
@@ -203,6 +200,8 @@ public class BirthdayController {
         iResult.put("error",errorLog);
         iResult.put("success",Integer.toString(numSuccess));
         iResult.put("fail",Integer.toString(numFail));
+        iResult.put("contact_campaign",contact_campaign);
+        iResult.put("date_campaign",importTime);
         return iResult;
     }
     @CrossOrigin
