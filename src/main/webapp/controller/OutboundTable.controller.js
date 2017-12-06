@@ -218,14 +218,14 @@ sap.ui.define([
                     this.tableModel = this.getTableData(tableName, this._currentPage);
                     this.getView().setModel(this.tableModel);
                     this.getView().byId("pageTextId").setText("Page " + this._currentPage);
-                    var rs = "+ Import Success: " + myJSON.success + "rows" +
-                        "\n+ Import Fail: " + myJSON.fail + "rows";
+                    var rs = "+ Import thành công: " + myJSON.success + "bản ghi" +
+                        "\n+ Import lỗi: " + myJSON.fail + "bản ghi";
                     if (myJSON.error.length > 0)
                         rs += "\n+ Error: " + myJSON.error;
                     if (myJSON.contact_campaign.length > 0)
-                        rs += "\n+ Contact Campaign: " + myJSON.contact_campaign;
+                        rs += "\n+ File import: " + myJSON.contact_campaign;
                     if (myJSON.date_campaign.length > 0)
-                        rs += "\n+ Date Campaign: " + myJSON.date_campaign;
+                        rs += "\n+ Thời gian import: " + myJSON.date_campaign;
                     this.getView().byId("result").setValue("-- RESULT --\n\n" + rs);
                 } else {
                     this._currentPage = 0;
@@ -267,14 +267,14 @@ sap.ui.define([
                 this.tableModel = this.getTableData(tableName, this._currentPage);
                 this.getView().setModel(this.tableModel);
                 this.getView().byId("pageTextId").setText("Page " + this._currentPage);
-                var rs = "+ Import Success: " + myJSON.success + "rows" +
-                    "\n+ Import Fail: " + myJSON.fail + "rows";
+                var rs = "+ Import thành công: " + myJSON.success + "bản ghi" +
+                    "\n+ Import lỗi: " + myJSON.fail + "bản ghi";
                 if (myJSON.error.length > 0)
                     rs += "\n+ Error: " + myJSON.error;
                 if (myJSON.contact_campaign.length > 0)
-                    rs += "\n+ Contact Campaign: " + myJSON.contact_campaign;
+                    rs += "\n+ File import: " + myJSON.contact_campaign;
                 if (myJSON.date_campaign.length > 0)
-                    rs += "\n+ Date Campaign: " + myJSON.date_campaign;
+                    rs += "\n+ Thời gian import: " + myJSON.date_campaign;
                 this.getView().byId("result").setValue("-- RESULT --\n\n" + rs);
             } else {
                 this._currentPage = 0;

@@ -2,7 +2,7 @@ package com.ssdc.ipcc.entities;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "cc247survey")
+@Table(name = "acbsurvey")
 public class Survey {
     @Id
 //    @GeneratedValue(strategy = GenerationType.AUTO)

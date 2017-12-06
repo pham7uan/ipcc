@@ -9,8 +9,8 @@
         xmlns:c="sap.ui.core"
         xmlns:m="sap.m">
 
-    <m:HBox class="sapUiSmallMargin" justifyContent="Center">
-        <m:Text text="Select Table" textAlign="Center" class="sapUiSmallMargin"/>
+    <m:HBox justifyContent="Center">
+        <m:Text text="Select Table" textAlign="Center" width="6em" class="sapUiSmallMargin"/>
         <m:ComboBox
                 class="sapUiSmallMarginEnd"
                 id="combobox"
@@ -64,7 +64,7 @@
                 press="handleUploadPress"/>
         <m:Button
                 class="sapUiSmallMarginEnd"
-                text="Export to Excel"
+                text="Export"
                 icon="sap-icon://excel-attachment"
                 tooltip="Export table data to excel file"
                 press="exportFile"/>

@@ -236,7 +236,11 @@ public class SurveyExcelView extends AbstractExcelView{
 
             Cell c13 = row.createCell(13);
             c13.setCellStyle(style);
-            c13.setCellValue(survey.getFeedback());
+            if (survey.getFeedback() !=null && !survey.getFeedback().isEmpty()){
+                if (!survey.getFeedback().equals("0")){
+                    c13.setCellValue(survey.getFeedback());
+                }
+            }
 
             Cell c14 = row.createCell(14);
             c14.setCellStyle(style);

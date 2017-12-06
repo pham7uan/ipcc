@@ -2,7 +2,7 @@
         xmlns="sap.m"
         xmlns:core="sap.ui.core" >
     <Dialog
-            title="Preview">
+            title="Review">
         <beginButton>
             <Button
                     text="{i18n>reviewClose}"
@@ -16,7 +16,7 @@
                    inset="false"
                    ariaLabelledBy="title">
                 <columns>
-                    <Column width="5em" demandPopin="true"><Text text="ID" /></Column>
+                    <Column width="4em" demandPopin="true"><Text text="ID" /></Column>
                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tên đơn vị" /></Column>
                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Mã KH" /></Column>
                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tên KH" /></Column>
@@ -40,7 +40,7 @@
                    inset="false"
                    ariaLabelledBy="title">
                 <columns>
-                    <Column width="5em" demandPopin="true"><Text text="ID" /></Column>
+                    <Column width="4em" demandPopin="true"><Text text="ID" /></Column>
                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Mã KH" /></Column>
                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tên KH" /></Column>
                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="SĐT 1" /></Column>

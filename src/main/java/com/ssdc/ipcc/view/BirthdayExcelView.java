@@ -210,7 +210,7 @@ public class BirthdayExcelView extends AbstractExcelView{
                         break;
                     case "0": c9.setCellValue("x");
                         break;
-                    default: c10.setCellValue(birthday.getLoyaltyQn1());
+                    default: c10.setCellValue(birthday.getOtherReason01());
                         break;
                 }
             }
@@ -228,7 +228,7 @@ public class BirthdayExcelView extends AbstractExcelView{
                         break;
                     case "0": c12.setCellValue("x");
                         break;
-                    default: c13.setCellValue(birthday.getShiperName());
+                    default: c13.setCellValue(birthday.getOtherReason02());
                         break;
                 }
             }
@@ -236,7 +236,12 @@ public class BirthdayExcelView extends AbstractExcelView{
 
             Cell c14 = row.createCell(14);
             c14.setCellStyle(style);
-            c14.setCellValue(birthday.getFeedback());
+            if (birthday.getFeedback() !=null && !birthday.getFeedback().isEmpty()){
+                if (!birthday.getFeedback().equals("0")){
+                    c14.setCellValue(birthday.getFeedback());
+                }
+            }
+
         }
 
     }

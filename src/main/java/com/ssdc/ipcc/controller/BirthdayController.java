@@ -132,13 +132,13 @@ public class BirthdayController {
                 for (int j=0; j<notNulls.length;j++){
                     if (data[notNulls[j]] == null){
                         int c = notNulls[j]+1;
-                        errorLog = errorLog + " -Dòng "+r + ". Cột thứ "+c+" bị trống.&";
+                        errorLog = errorLog + " - Dòng "+r + ". Cột thứ "+c+" bị trống.";
                         validate = false;
                     }
                 }
 
                 if (data[4] == null && data[5] == null){
-                    errorLog = errorLog + " -Dòng "+r + ": Cần ít nhất một số điện thoại.";
+                    errorLog = errorLog + " - Dòng "+r + ": Cần ít nhất một số điện thoại.";
                     validate = false;
                 }
 
@@ -204,8 +204,8 @@ public class BirthdayController {
         int numPage = Util.getNumPage(import_list);
         iResult.put("pages",Integer.toString(numPage));
         iResult.put("error",errorLog);
-        iResult.put("success",Integer.toString(numSuccess));
-        iResult.put("fail",Integer.toString(numFail));
+        iResult.put("success",Integer.toString(numSuccess) +" ");
+        iResult.put("fail",Integer.toString(numFail) +" ");
         iResult.put("contact_campaign",contact_campaign);
         iResult.put("date_campaign",importTime);
         return iResult;
