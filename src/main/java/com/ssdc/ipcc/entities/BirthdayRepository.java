@@ -15,7 +15,7 @@ public interface BirthdayRepository extends CrudRepository<Birthday, Long> {
     @Query("SELECT coalesce(max(ch.id), 0) FROM Birthday ch")
     Integer getMaxRecordId();
 
-    @Query("SELECT DISTINCT ch.dateCampaign, ch.contactCampaign FROM Birthday ch")
+    @Query("SELECT DISTINCT ch.dateCampaign, ch.contactCampaign FROM Birthday ch ORDER BY ch.dateCampaign DESC ")
     List<Object> findImportHistory();
 
     @Query("SELECT ch.id FROM Birthday ch WHERE ch.dateCampaign = :date AND ch.contactCampaign = :filename")
