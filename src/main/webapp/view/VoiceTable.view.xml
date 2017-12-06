@@ -102,17 +102,31 @@
             </Column>
             <Column
                     hAlign="Center"
-                    width="5em"
+                    width="23.5em"
                     demandPopin="true">
                 <m:Label text="Record"/>
                 <template>
-                    <m:Button icon="sap-icon://media-play" app:mydata="{id}" app:mydataName="{customer_name}"
+                    <!--<m:Button icon="sap-icon://media-play" app:mydata="{id}" app:mydataName="{customer_name}"
                               app:mydataDate="{date_record}"
-                              app:mydataLink="{host_model>/host_address}/{path_file_record}" press="clickLink"/>
+                              app:mydataLink="{host_model>/host_address}/{path_file_record}" press="clickLink"/>-->
                     <!--<m:Link text="Play"
                             target="_blank"
                             app:mydata="{id}" press="clickLink"
                             href="http://10.2.8.58:8181/voice_mail/{path_file_record}"/>-->
+                    <m:HBox>
+                        <c:HTML
+                                content='&lt;div class=&quot;content&quot;&gt;
+                                &lt;audio controls&gt;
+                                    &lt;source src="{host_model>/host_address}/{path_file_record}" type="audio/wav"&gt;
+                                    Your browser does not support the audio element.
+                                &lt;/audio&gt;
+                            &lt;/div&gt;'>
+                        </c:HTML>
+                        <m:Button
+                                class="sapUiSmallMarginBegin" icon="sap-icon://download"
+                                app:mydataDownloadName="{customer_name} -- {date_record}"
+                                app:mydataDownloadLink="{host_model>/host_address}/{path_file_record}" press="downloadAudio"/>
+                    </m:HBox>
 
                 </template>
             </Column>
@@ -121,7 +135,7 @@
                     filterProperty="customer_name"
                     minScreenWidth="Tablet"
                     demandPopin="true">
-                <m:Label text="Customer Name"/>
+                <m:Label text="Cus. Name"/>
                 <template>
                     <m:Text text="{customer_name}" wrapping="false"/>
                 </template>
@@ -131,7 +145,7 @@
                     filterProperty="customer_type"
                     minScreenWidth="Tablet"
                     demandPopin="true">
-                <m:Label text="Customer Type"/>
+                <m:Label text="Cus. Type"/>
                 <template>
                     <m:Text text="{customer_type}" wrapping="false"/>
                 </template>
@@ -143,7 +157,7 @@
                     hAlign="Center"
                     minScreenWidth="Tablet"
                     demandPopin="true">
-                <m:Label text="Customer Phone"/>
+                <m:Label text="Cus. Phone"/>
                 <template>
                     <m:Text text="{customer_phone}" wrapping="false"/>
                 </template>
@@ -186,7 +200,7 @@
             <Column
                     sortProperty="agent_note"
                     filterProperty="agent_note"
-                    minScreenWidth="Tablet"
+                    width="10em"
                     demandPopin="true">
                 <m:Label text="Note"/>
                 <template>
@@ -206,4 +220,6 @@
             </Column>
         </columns>
     </Table>
+
+
 </mvc:View>

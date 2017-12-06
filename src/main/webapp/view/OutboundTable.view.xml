@@ -19,6 +19,7 @@
         </m:ComboBox>
 
         <u:FileUploader
+                enabled="false"
                 class="sapUiSmallMarginEnd"
                 id="fileUploader"
                 name="file"
@@ -49,6 +50,13 @@
         </u:FileUploader>
         <m:Button
                 class="sapUiSmallMarginEnd"
+                id="btnReview"
+                icon="sap-icon://show"
+                tooltip="Review data before import"
+                text="Review"
+                press="handleReviewPress"/>
+        <m:Button
+                class="sapUiSmallMarginEnd"
                 id="btnUpload"
                 icon="sap-icon://upload"
                 tooltip="Import data from excel file"
@@ -61,11 +69,18 @@
                 tooltip="Export table data to excel file"
                 press="exportFile"/>
         <m:Button
+                class="sapUiSmallMarginEnd"
                 id="btnDownload"
                 icon="sap-icon://download"
                 tooltip="Download sample excel file"
                 text="Get Import Form"
                 press="handleDownloadPress"/>
+        <m:Button
+                id="btnHistory"
+                icon="sap-icon://history"
+                tooltip="Import history"
+                text="History"
+                press="handleHistoryPress"/>
     </m:HBox>
 
     <m:TextArea id="result" growing="true" editable="false" value="" textAlign="Left" width="100%"
@@ -253,6 +268,53 @@
                 <m:Label text="Tên CN thực hiện"/>
                 <template>
                     <m:Text text="{ten_cn_thuc_hien}" wrapping="true"/>
+                </template>
+            </Column>
+        </columns>
+    </Table>
+
+    <!-- History Table -->
+    <Table id="table_history"
+           width="auto"
+           visible="false"
+           selectionMode="None"
+           inset="false"
+           ariaLabelledBy="title"
+           >
+
+        <columns>
+            <Column
+                    sortProperty="ngay_import"
+                    filterProperty="ngay_import"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="Ngày Import"/>
+                <template>
+                    <m:Text text="{ngay_import}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    sortProperty="file_import"
+                    filterProperty="file_import"
+                    minScreenWidth="Tablet"
+                    demandPopin="true">
+                <m:Label text="File Import"/>
+                <template>
+                    <m:Text text="{file_import}" wrapping="true"/>
+                </template>
+            </Column>
+            <Column
+                    hAlign="Center"
+                    width="5em"
+                    demandPopin="true">
+                <m:Label text="Delete"/>
+                <template>
+                    <m:Button
+                            app:mydataDateImport="{ngay_import}"
+                            app:mydataFileImport="{file_import}"
+                            icon="sap-icon://delete"
+                            tooltip="Delete"
+                            press="handleDeletePress" wrapping="true"/>
                 </template>
             </Column>
         </columns>

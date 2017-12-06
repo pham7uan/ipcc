@@ -1,0 +1,55 @@
+<core:FragmentDefinition
+        xmlns="sap.m"
+        xmlns:core="sap.ui.core" >
+    <Dialog
+            title="Preview">
+        <beginButton>
+            <Button
+                    text="{i18n>reviewClose}"
+                    press="closeReviewButton"/>
+        </beginButton>
+        <content>
+            <Table id="table_birthday"
+                   visible="false"
+                   width="75em"
+                   selectionMode="None"
+                   inset="false"
+                   ariaLabelledBy="title">
+                <columns>
+                    <Column width="5em" demandPopin="true"><Text text="ID" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tên đơn vị" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Mã KH" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tên KH" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="SĐT 1" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="SĐT 2" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Ngày sinh" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tháng sinh" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="KHUT" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Rank" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Hoa" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Bánh kem" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="NV Quản lý" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Check" /></Column>
+                </columns>
+            </Table>
+
+            <Table id="table_survey"
+                   visible="false"
+                   width="75em"
+                   selectionMode="None"
+                   inset="false"
+                   ariaLabelledBy="title">
+                <columns>
+                    <Column width="5em" demandPopin="true"><Text text="ID" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Mã KH" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tên KH" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="SĐT 1" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="SĐT 2" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="ACCTNBR" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Tên CN Thực hiện" /></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Check" /></Column>
+                </columns>
+            </Table>
+        </content>
+    </Dialog>
+</core:FragmentDefinition>
