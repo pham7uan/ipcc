@@ -458,15 +458,15 @@ sap.ui.define([
                     text: 'Export',
                     press: function () {
                         var oExportData = [];
-                        for (var i = 0; i < _tableData.length; i++) {
-                            oExportData.push(oModelObject[_tableData[i]])
-                        }
-                        // console.log(oExportData);
-                        if (oExportData.length == 0) {
-                            MessageToast.show("No data to export!");
-                            dialog.close();
-                            return;
-                        }
+                        // for (var i = 0; i < _tableData.length; i++) {
+                        //     oExportData.push(oModelObject[_tableData[i]])
+                        // }
+                        // // console.log(oExportData);
+                        // if (oExportData.length == 0) {
+                        //     MessageToast.show("No data to export!");
+                        //     dialog.close();
+                        //     return;
+                        // }
 
                         $.ajax({
                             contentType: 'application/ms-excel',

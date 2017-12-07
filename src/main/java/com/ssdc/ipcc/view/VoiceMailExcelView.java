@@ -1,6 +1,7 @@
 package com.ssdc.ipcc.view;
 
 
+import com.ssdc.ipcc.entities.VoiceMail;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -23,7 +24,7 @@ public class VoiceMailExcelView extends AbstractExcelView{
                                       HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
-        Map<Integer,JSONObject> revenueData = (Map<Integer,JSONObject>) model.get("voiceMailData");
+        Map<Integer,VoiceMail> revenueData = (Map<Integer,VoiceMail>) model.get("voiceMailData");
         //create a wordsheet
 //        FileOutputStream fileOut = new FileOutputStream("result.xlsx");
         HSSFSheet sheet = workbook.createSheet("Voice Mail");
@@ -85,7 +86,7 @@ public class VoiceMailExcelView extends AbstractExcelView{
 
         int rowNum = 1;
         for (int i=0; i< revenueData.size(); i++){
-            JSONObject voicemail = revenueData.get(i);
+            VoiceMail voicemail = revenueData.get(i);
             HSSFRow row = sheet.createRow(rowNum++);
             Cell c0 = row.createCell(0);
             c0.setCellStyle(style);
@@ -93,44 +94,44 @@ public class VoiceMailExcelView extends AbstractExcelView{
 
             Cell c1 = row.createCell(1);
             c1.setCellStyle(style);
-            if (voicemail.has("customer_name") && !voicemail.isNull("customer_name")){
-                c1.setCellValue((String)voicemail.get("customer_name"));
+            if (voicemail.getCustomerName()!=null && !voicemail.getCustomerName().isEmpty()){
+                c1.setCellValue(voicemail.getCustomerName());
             }
 
             Cell c2 = row.createCell(2);
             c2.setCellStyle(style);
-            if (voicemail.has("customer_type") && !voicemail.isNull("customer_type")){
-                c2.setCellValue((String)voicemail.get("customer_type"));
+            if (voicemail.getCustomerType()!=null && !voicemail.getCustomerType().isEmpty()){
+                c2.setCellValue(voicemail.getCustomerType());
             }
 
             Cell c3 = row.createCell(3);
             c3.setCellStyle(style);
-            if (voicemail.has("customer_phone") && !voicemail.isNull("customer_phone")){
-                c3.setCellValue((String)voicemail.get("customer_phone"));
+            if (voicemail.getCustomerPhone()!=null && !voicemail.getCustomerPhone().isEmpty()){
+                c3.setCellValue(voicemail.getCustomerPhone());
             }
 
             Cell c4 = row.createCell(4);
             c4.setCellStyle(style);
-            if (voicemail.has("date_record") && !voicemail.isNull("date_record")){
-                c4.setCellValue((String)voicemail.get("date_record"));
+            if (voicemail.getDateRecord()!=null && !voicemail.getDateRecord().isEmpty()){
+                c4.setCellValue(voicemail.getDateRecord());
             }
 
             Cell c5 = row.createCell(5);
             c5.setCellStyle(style);
-            if (voicemail.has("branch_call") && !voicemail.isNull("branch_call")){
-                c5.setCellValue((String)voicemail.get("branch_call"));
+            if (voicemail.getBranchCall()!=null && !voicemail.getBranchCall().isEmpty()){
+                c5.setCellValue(voicemail.getBranchCall());
             }
 
             Cell c6 = row.createCell(6);
             c6.setCellStyle(style);
-            if (voicemail.has("status_agent_seen") && !voicemail.isNull("status_agent_seen")){
-                c6.setCellValue((String)voicemail.get("status_agent_seen"));
+            if (voicemail.getStatusAgentSeen()!=null && !voicemail.getStatusAgentSeen().isEmpty()){
+                c6.setCellValue(voicemail.getStatusAgentSeen());
             }
 
             Cell c7 = row.createCell(7);
             c7.setCellStyle(style);
-            if (voicemail.has("agent_note") && !voicemail.isNull("agent_note")){
-                c7.setCellValue((String)voicemail.get("agent_note"));
+            if (voicemail.getAgentNote()!=null && !voicemail.getAgentNote().isEmpty()){
+                c7.setCellValue(voicemail.getAgentNote());
             }
 
 
