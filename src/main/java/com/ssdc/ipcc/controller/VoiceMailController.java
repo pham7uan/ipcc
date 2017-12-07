@@ -9,6 +9,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,11 +45,11 @@ public class VoiceMailController {
         Specification<VoiceMail> spec = builder.build();
         VoiceMail voiceMail = voiceMailRepository.findOne(spec);
         if (isSeen.equals("1")) {
-            voiceMail.setStatus_agent_seen("1");
+            voiceMail.setStatusAgentSeen("1");
             voiceMail.setAgent_seen_time(Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss"));
         }
         if (!note.isEmpty() && !note.equals("")) {
-            voiceMail.setAgent_note(note);
+            voiceMail.setAgentNote(note);
         }
 
         voiceMailRepository.save(voiceMail);
@@ -85,7 +86,10 @@ public class VoiceMailController {
     @CrossOrigin
     @GetMapping(path = "/all")
     @ResponseBody
-    public List<VoiceMail> search(@RequestParam(value = "page") int page,@RequestParam(value = "search") String search) {
+    public List<VoiceMail> search(@RequestParam(value = "page") int page,
+                                  @RequestParam(value = "sortcolumn") String sortcolumn,
+                                  @RequestParam(value = "directive") String directive,
+                                  @RequestParam(value = "search") String search) {
 //        System.out.println(search);
         SpecificationsBuilder builder = new SpecificationsBuilder();
 //        Pattern pattern = Pattern.compile(" (\\w+?)(:|<|>)(a-zA-Z0-9\\-)*,");
@@ -110,6 +114,17 @@ public class VoiceMailController {
         }
         Specification<VoiceMail> spec = builder.build();
 //        return voiceMailRepository.findAll(spec);
+        if (!sortcolumn.isEmpty() && sortcolumn !=null){
+            if (directive.equals("DESC")){
+                Sort s = new Sort(Sort.Direction.DESC,sortcolumn);
+                return Util.PaginationList(voiceMailRepository.findAll(spec,s),page);
+            } else if(directive.equals("ASC")){
+                Sort s = new Sort(Sort.Direction.ASC,sortcolumn);
+                return Util.PaginationList(voiceMailRepository.findAll(spec,s),page);
+            }
+        }
+
+
         return Util.PaginationList(voiceMailRepository.findAll(spec),page);
     }
 

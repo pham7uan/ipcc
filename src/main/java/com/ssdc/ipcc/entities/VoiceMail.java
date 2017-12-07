@@ -7,17 +7,28 @@ public class VoiceMail {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    private String customer_name;
-    private String customer_type;
-    private String customer_phone;
-    private String date_record;
-    private String branch_call;
-    private String status_agent_seen;
-    private int agent_seen_id;
-    private String agent_seen_name;
-    private String agent_seen_time;
-    private String agent_note;
-    private String path_file_record;
+    @Column(name="customer_name")
+    private String customerName;
+    @Column(name="customer_type")
+    private String customerType;
+    @Column(name="customer_phone")
+    private String customerPhone;
+    @Column(name="date_record")
+    private String dateRecord;
+    @Column(name="branch_call")
+    private String branchCall;
+    @Column(name="status_agent_seen")
+    private String statusAgentSeen;
+    @Column(name="agent_seen_id")
+    private int agentSeenId;
+    @Column(name="agent_seen_name")
+    private String agentSeenName;
+    @Column(name="agent_seen_time")
+    private String agentSeenTime;
+    @Column(name="agent_note")
+    private String agentNote;
+    @Column(name="path_file_record")
+    private String pathFileRecord;
     public VoiceMail() {
     }
 
@@ -25,17 +36,17 @@ public class VoiceMail {
                     String date_record,String  branch_call, String status_agent_seen,
                     int agent_seen_id,String agent_seen_name,String agent_seen_time,
                     String agent_note, String path_file_record) {
-        this.customer_name = customer_name;
-        this.customer_type = customer_type;
-        this.customer_phone = customer_phone;
-        this.date_record= date_record;
-        this.branch_call= branch_call;
-        this.status_agent_seen= status_agent_seen;
-        this.agent_seen_id= agent_seen_id;
-        this.agent_seen_name= agent_seen_name;
-        this.agent_seen_time= agent_seen_time;
-        this.agent_note= agent_note;
-        this.path_file_record= path_file_record;
+        this.customerName = customer_name;
+        this.customerType = customer_type;
+        this.customerPhone = customer_phone;
+        this.dateRecord= date_record;
+        this.branchCall= branch_call;
+        this.statusAgentSeen= status_agent_seen;
+        this.agentSeenId= agent_seen_id;
+        this.agentSeenName= agent_seen_name;
+        this.agentSeenTime= agent_seen_time;
+        this.agentNote= agent_note;
+        this.pathFileRecord= path_file_record;
     }
 
     public Integer getId() {
@@ -45,99 +56,91 @@ public class VoiceMail {
         this.id = id;
     }
 
-    public String getCustomer_name() {
-        return customer_name;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public void setCustomer_name(String customer_name) {
-        this.customer_name = customer_name;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
 
-    public String getCustomer_type() {
-        return customer_type;
+    public String getCustomerType() {
+        return customerType;
     }
 
-    public void setCustomer_type(String customer_type) {
-        this.customer_type = customer_type;
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
     }
 
-    public String getCustomer_phone() {
-        return customer_phone;
+    public String getCustomerPhone() {
+        return customerPhone;
     }
 
-    public void setCustomer_phone(String customer_phone) {
-        this.customer_phone = customer_phone;
+    public void setCustomerPhone(String customerPhone) {
+        this.customerPhone = customerPhone;
     }
 
-    public String getDate_record() {
-        return date_record;
+    public String getDateRecord() {
+        return dateRecord;
     }
 
-    public void setDate_record(String date_record) {
-        this.date_record = date_record;
+    public void setDateRecord(String dateRecord) {
+        this.dateRecord = dateRecord;
     }
 
-    public String getBranch_call() {
-        return branch_call;
+    public String getBranchCall() {
+        return branchCall;
     }
 
-    public void setBranch_call(String branch_call) {
-        this.branch_call = branch_call;
+    public void setBranchCall(String branchCall) {
+        this.branchCall = branchCall;
     }
 
-    public String getStatus_agent_seen() {
-        return status_agent_seen;
+    public String getStatusAgentSeen() {
+        return statusAgentSeen;
     }
 
-    public void setStatus_agent_seen(String status_agent_seen) {
-        this.status_agent_seen = status_agent_seen;
+    public void setStatusAgentSeen(String statusAgentSeen) {
+        this.statusAgentSeen = statusAgentSeen;
     }
 
-    public int getAgent_seen_id() {
-        return agent_seen_id;
+    public int getAgentSeenId() {
+        return agentSeenId;
     }
 
-    public void setAgent_seen_id(int agent_seen_id) {
-        this.agent_seen_id = agent_seen_id;
+    public void setAgentSeenId(int agentSeenId) {
+        this.agentSeenId = agentSeenId;
     }
 
     public String getAgent_seen_name() {
-        return agent_seen_name;
+        return agentSeenName;
     }
 
     public void setAgent_seen_name(String agent_seen_name) {
-        this.agent_seen_name = agent_seen_name;
+        this.agentSeenName = agent_seen_name;
     }
 
     public String getAgent_seen_time() {
-        return agent_seen_time;
+        return agentSeenTime;
     }
 
     public void setAgent_seen_time(String agent_seen_time) {
-        this.agent_seen_time = agent_seen_time;
+        this.agentSeenTime = agent_seen_time;
     }
 
-    public String getAgent_note() {
-        return agent_note;
+    public String getAgentNote() {
+        return agentNote;
     }
 
-    public void setAgent_note(String agent_note) {
-        this.agent_note = agent_note;
+    public void setAgentNote(String agentNote) {
+        this.agentNote = agentNote;
     }
 
-    public String getPath_file_record() {
-        return path_file_record;
+    public String getPathFileRecord() {
+        return pathFileRecord;
     }
 
-    public void setPath_file_record(String path_file_record) {
-        this.path_file_record = path_file_record;
+    public void setPathFileRecord(String pathFileRecord) {
+        this.pathFileRecord = pathFileRecord;
     }
-
-//    @Override
-//    public String toString() {
-//        return "void_mail{" +
-//                ", customer_name='" + customer_name + '\'' +
-//                ", customer_phone=" + customer_phone +
-//                '}';
-//    }
 }
