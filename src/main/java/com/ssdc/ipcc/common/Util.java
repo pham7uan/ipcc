@@ -59,7 +59,7 @@ public class Util {
 
     public static <T> List<T> PaginationList(List<T> list,int page){
         List<T> p;
-        int size =7;
+        int size =10;
         int numPage= getNumPage(list);
         if (page <0 || page>numPage){
             return null;
@@ -83,7 +83,7 @@ public class Util {
     }
 
     public static <T> int getNumPage(List<T> list){
-        int size =7;
+        int size =10;
         int numPage=0;
         if (list.size()%size > 0){
             numPage = list.size()/size +1;

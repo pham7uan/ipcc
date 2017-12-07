@@ -15,6 +15,8 @@ sap.ui.define([
 
     var _tableData = null;
     var HOST = "";
+    var total_page = 1;
+    var current_page = 1;
 
     var ListController = Controller.extend("sap.ui.ipcc.wt.controller.VoiceTable", {
 
@@ -44,9 +46,9 @@ sap.ui.define([
 
             // Date
             this.getView().setModel(new JSONModel({
-                "dateStart": new Date(),
-                "dateEnd": new Date(),
-                "dateFind": false
+                "dateStart": null, //new Date(),
+                "dateEnd": null, //new Date(),
+                "dateFind": true
             }), "dateModel");
 
             // Table data temp
@@ -66,13 +68,33 @@ sap.ui.define([
             // host
             this.hostModel = this.getHostAddress();
             this.getView().setModel(this.hostModel, "host_model");
+
+            // filter combobox
+            this.filterCollectionModel = this.initModelCollection("/FilterCollection.json");
+            var combobox = this.getView().byId("combobox");
+            combobox.setModel(this.filterCollectionModel);
+            var oItemTemplate = new sap.ui.core.ListItem();
+            oItemTemplate.bindProperty("key", "id");
+            oItemTemplate.bindProperty("text", "name");
+            combobox.bindItems("/FilterCollection", oItemTemplate);
+
+            // Select Parameter
+            this.getView().setModel(new JSONModel({
+                "customerName": "",
+                "customerType": "",
+                "customerPhone": "",
+                "dateRecord": "",
+                "branchCall": "",
+                "sortcolumn": "",
+                "directive": ""
+            }), "parameterModel");
         },
 
         initValue() {
             var oModel = new JSONModel();
             // console.log(HOST)
             jQuery.ajax({
-                url: HOST + "/api/voicemail/all?search",
+                url: HOST + "/api/voicemail/all?&sortcolumn=&directive=&page=" + current_page + "&search",
                 dataType: "json",
                 success: function (oData) {
                     oModel.setData(oData);
@@ -86,6 +108,22 @@ sap.ui.define([
 
                 error: function () {
                     jQuery.sap.log.error("failed");
+                }
+            });
+
+            return oModel;
+        },
+
+        initModelCollection: function (fileName) {
+            var oModel = new JSONModel();
+            jQuery.ajax(jQuery.sap.getModulePath("sap.ui.demo.mock", fileName), {
+                dataType: "json",
+                success: function (oData) {
+                    oModel.setData(oData);
+                },
+
+                error: function () {
+                    jQuery.sap.log.error("failed to load json");
                 }
             });
 
@@ -190,10 +228,6 @@ sap.ui.define([
             oDialog.open();
         },
 
-        showMe: function() {
-            alert("aaa")
-        },
-
         showFindDate: function (evt) {
             var oDateModel = this.getView().getModel("dateModel");
             var findAllow = oDateModel.getProperty("/dateFind");
@@ -208,7 +242,7 @@ sap.ui.define([
             }
         },
 
-        findBetweenDate: function (evt) {
+        findbetweenDate: function (evt) {
             var dateStart = this.getView().byId("dateFrom").getValue();
             var dateEnd = this.getView().byId("dateTo").getValue();
             var d1 = dateStart.split("/");
@@ -349,6 +383,43 @@ sap.ui.define([
             });
 
             dialog1.open();
+        },
+
+        handleAudioPlayer: function (evt) {
+            var id = evt.getSource().data("mydata");
+            if (id != null) {
+                var model = this.oModel;
+                var mainModel = model.oData;
+
+                var audio = document.getElementById("audio_" + id);
+                playAudio(audio, function (action) {
+                    if (action == "PLAY") {
+                        var index = 0;
+                        for (var i = 0; i < mainModel.length; i++) {
+                            if (mainModel[i].id == id) {
+                                index = i;
+                                break;
+                            }
+                        }
+
+                        jQuery.ajax({
+                            url: HOST + "/api/voicemail/update?id=" + id + "&isSeen=1&note=''",
+                            success: function (oData) {
+                                // console.log(oData)
+                                mainModel[index].status_agent_seen = "1";
+                                model.refresh();
+                                alert("Seen" + id)
+                            },
+
+                            error: function () {
+                                jQuery.sap.log.error("failed");
+                            }
+                        });
+                    } else if (action == "PAUSE") {
+
+                    }
+                });
+            }
         },
 
         // Download audio
@@ -492,7 +563,267 @@ sap.ui.define([
 
             }
             return info;
-        }
+        },
+
+        handleComboboxFilterChange: function () {
+            var combobox = this.getView().byId("combobox");
+            var selected = combobox.getSelectedKey();
+            var oUiModel = this.getView().getModel("parameterModel");
+
+            if (selected == 0) {
+                oUiModel.setProperty("/sortcolumn", "");
+                this.showSortFunction(false);
+                oUiModel.setProperty("/directive", "");
+            } else if (selected == 1) {
+                oUiModel.setProperty("/sortcolumn", "customerName");
+                this.showSortFunction(true);
+            } else if (selected == 2) {
+                oUiModel.setProperty("/sortcolumn", "customerType");
+                this.showSortFunction(true);
+            } else if (selected == 3) {
+                oUiModel.setProperty("/sortcolumn", "customerPhone");
+                this.showSortFunction(true);
+            } else if (selected == 4) {
+                oUiModel.setProperty("/sortcolumn", "dateRecord");
+                this.showSortFunction(true);
+            } else if (selected == 5) {
+                oUiModel.setProperty("/sortcolumn", "branchCall");
+                this.showSortFunction(true);
+            }
+        },
+
+        showSortFunction: function (show) {
+            this.getView().byId("sort_type_btn").setEnabled(show);
+            this.getView().byId("sort_type_btn").setIcon("sap-icon://navigation-up-arrow");
+            this.getView().getModel("parameterModel").setProperty("/directive", "ASC");
+        },
+
+        changeSort: function () {
+            var directive = this.getView().getModel("parameterModel").getProperty("/directive");
+            if (directive == "ASC") {
+                this.getView().byId("sort_type_btn").setIcon("sap-icon://navigation-down-arrow");
+                this.getView().getModel("parameterModel").setProperty("/directive", "DESC");
+            } else {
+                this.getView().byId("sort_type_btn").setIcon("sap-icon://navigation-up-arrow");
+                this.getView().getModel("parameterModel").setProperty("/directive", "ASC");
+            }
+
+            this.searchResult();
+        },
+
+        handleComboboxSortChange: function () {
+            var combobox = this.getView().byId("combobox_sort");
+            var selected = combobox.getSelectedKey();
+            var oUiModel = this.getView().getModel("parameterModel");
+
+            if (selected == 0) {
+                oUiModel.setProperty("/directive", "ASC");
+            } else if (selected == 1) {
+                oUiModel.setProperty("/directive", "DESC");
+            }
+        },
+
+        clearAllFilterCollection: function () {
+            this.getView().byId("combobox").setSelectedKey("0");
+            this.getView().getModel("parameterModel").setProperty("/customerName", "");
+            this.getView().getModel("parameterModel").setProperty("/customerType", "");
+            this.getView().getModel("parameterModel").setProperty("/customerPhone", "");
+            this.getView().getModel("parameterModel").setProperty("/dateRecord", "");
+            this.getView().getModel("parameterModel").setProperty("/branchCall", "");
+            this.getView().getModel("parameterModel").setProperty("/sortcolumn", "");
+            this.getView().getModel("parameterModel").setProperty("/directive", "");
+
+            this.getView().byId("sort_type_btn").setIcon("sap-icon://navigation-up-arrow");
+            this.getView().byId("sort_type_btn").setEnabled(false);
+
+            this.getView().byId("customerName").setValue("");
+            this.getView().byId("customerType").setValue("");
+            this.getView().byId("customerPhone").setValue("");
+            this.getView().byId("dateRecord").setValue("");
+            this.getView().byId("branchCall").setValue("");
+
+        },
+
+        handle_value_search_change: function (evt) {
+            var type = evt.getSource().data("mydataSearch");
+            this.getView().getModel("parameterModel").setProperty("/" + type, this.getView().byId(type).getValue());
+        },
+
+        searchResult: function () {
+            var oUiModel = this.getView().getModel("parameterModel");
+            var data = oUiModel.getData();
+
+            var url = HOST + "/api/voicemail/all?page=" + current_page;
+            url += "&sortcolumn=" + data.sortcolumn;
+            url += "&directive=" + data.directive;
+
+            url += "&search=";
+
+            if (data.customerName != "") {
+                url += "customerName:" + data.customerName + ",";
+            }
+            if (data.customerType != "") {
+                url += "customerType:" + data.customerType + ",";
+            }
+            if (data.customerPhone != "") {
+                url += "customerPhone:" + data.customerPhone + ",";
+            }
+            if (data.dateRecord != "") {
+                url += "dateRecord:" + data.dateRecord + ",";
+            }
+            if (data.branchCall != "") {
+                url += "branchCall:" + data.branchCall + ",";
+            }
+
+            var dateStart = this.getView().byId("dateFrom").getValue();
+            var dateEnd = this.getView().byId("dateTo").getValue();
+            if (dateStart.length > 0) {
+                var d1 = dateStart.split("/");
+                var d1Final = d1[2] + "-" + d1[1] + "-" + d1[0];
+                url += "dateRecord>" + d1Final + ",";
+            }
+            if (dateEnd.length > 0) {
+                var d2 = dateEnd.split("/");
+                var d2Final = d2[2] + "-" + d2[1] + "-" + d2[0];
+                url += "dateRecord<" + d2Final + ",";
+            }
+
+            if (url.slice(-1) == ",")
+                url = url.substr(0, url.length - 1);
+
+            var oView = this.getView();
+            var _this = this;
+            jQuery.ajax({
+                url: url,
+                dataType: "json",
+                success: function (oData) {
+                    var oModel = new JSONModel();
+                    oModel.setData(oData);
+                    oModel.refresh();
+                    oView.setModel(oModel);
+                    var temp = [];
+                    var model = _this.oModel;
+                    var mainModel = model.oData;
+                    for (var i = 0; i < oData.length; i++) {
+                        temp.push(i);
+
+                        /*var audio = '<audio controls id="audio_'+oData[i].id+'">'
+                            + '<source src="'+ HOST + oData[i].pathFileRecord+'" type="audio/wav">'
+                            + '</audio>'
+                        var div = document.createElement('audio');
+                        div.setAttribute("controls", "");
+                        div.setAttribute("id", "audio_"+oData[i].id);
+                        div.innerHTML = '<source src="'+ HOST + oData[i].pathFileRecord+'" type="audio/wav">';
+                        playAudio(div, function (action) {
+                            if (action == "PLAY") {
+                                var index = 0;
+                                for (var i = 0; i < mainModel.length; i++) {
+                                    if (mainModel[i].id == id) {
+                                        index = i;
+                                        break;
+                                    }
+                                }
+
+                                jQuery.ajax({
+                                    url: HOST + "/api/voicemail/update?id=" + id + "&isSeen=1&note=''",
+                                    success: function (oData) {
+                                        // console.log(oData)
+                                        mainModel[index].status_agent_seen = "1";
+                                        model.refresh();
+                                        alert("Seen" + id)
+                                    },
+
+                                    error: function () {
+                                        jQuery.sap.log.error("failed");
+                                    }
+                                });
+                            } else if (action == "PAUSE") {
+
+                            }
+                        });*/
+                    }
+                    _tableData = temp;
+                    // console.log(_tableData);
+                },
+
+                error: function () {
+                    jQuery.sap.log.error("failed");
+                }
+            });
+
+        },
+
+        searchResult2: function () {
+            current_page++;
+
+            var oUiModel = this.getView().getModel("parameterModel");
+            var data = oUiModel.getData();
+
+            var url = HOST + "/api/voicemail/all?page=" + current_page;
+            url += "&sortcolumn=" + data.sortcolumn;
+            url += "&directive=" + data.directive;
+
+            url += "&search=";
+
+            if (data.customerName != "") {
+                url += "customerName:" + data.customerName + ",";
+            }
+            if (data.customerType != "") {
+                url += "customerType:" + data.customerType + ",";
+            }
+            if (data.customerPhone != "") {
+                url += "customerPhone:" + data.customerPhone + ",";
+            }
+            if (data.dateRecord != "") {
+                url += "dateRecord:" + data.dateRecord + ",";
+            }
+            if (data.branchCall != "") {
+                url += "branchCall:" + data.branchCall + ",";
+            }
+
+            var dateStart = this.getView().byId("dateFrom").getValue();
+            var dateEnd = this.getView().byId("dateTo").getValue();
+            if (dateStart.length > 0) {
+                var d1 = dateStart.split("/");
+                var d1Final = d1[2] + "-" + d1[1] + "-" + d1[0];
+                url += "dateRecord>" + d1Final + ",";
+            }
+            if (dateEnd.length > 0) {
+                var d2 = dateEnd.split("/");
+                var d2Final = d2[2] + "-" + d2[1] + "-" + d2[0];
+                url += "dateRecord<" + d2Final + ",";
+            }
+
+            if (url.slice(-1) == ",")
+                url = url.substr(0, url.length - 1);
+            var _this = this;
+            jQuery.ajax({
+                url: url,
+                dataType: "json",
+                success: function (oData) {
+                    _this.getView().byId("pageTextId").setText("Page " + current_page);
+                    _this.searchResult();
+                },
+
+                error: function () {
+                    jQuery.sap.log.error("failed");
+                    current_page--;
+                }
+            });
+
+        },
+
+        nextPage: function () {
+            this.searchResult2();
+        },
+
+        prevPage: function () {
+            if (current_page > 1) {
+                current_page--;
+                this.getView().byId("pageTextId").setText("Page " + current_page);
+                this.searchResult();
+            }
+        },
     });
 
     return ListController;

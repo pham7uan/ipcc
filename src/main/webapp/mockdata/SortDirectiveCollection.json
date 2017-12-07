@@ -1,0 +1,12 @@
+{
+  "SortDirective" : [
+    {
+      "id": 0,
+      "name": "ASC"
+    },
+    {
+      "id": 1,
+      "name": "DESC"
+    }
+  ]
+}

@@ -40,7 +40,30 @@
     <m:Toolbar>
         <m:Title text="{i18n>voiceListTitle}"/>
         <m:ToolbarSpacer/>
+        <m:Text text="Sort by"></m:Text>
+        <m:ComboBox
+                id="combobox"
+                selectedKey="0"
+                change="handleComboboxFilterChange">
+        </m:ComboBox>
+        <m:ComboBox
+                visible="false"
+                enabled="false"
+                id="combobox_sort"
+                selectedKey="0"
+                change="handleComboboxSortChange">
+        </m:ComboBox>
+        <m:Button
+                id="sort_type_btn"
+                enabled="false"
+                icon="sap-icon://navigation-up-arrow"
+                tooltip="Sort Type"
+                press="changeSort"/>
+    </m:Toolbar>
+
+    <m:Toolbar>
         <m:ToggleButton
+                visible="false"
                 text="Seen"
                 icon="sap-icon://complete"
                 tooltip="Show seen voice mail only"
@@ -51,23 +74,50 @@
                 tooltip="Enable / Disable Cell Filter Functionality"
                 pressed="{ui>/cellFilterOn}"/>-->
         <m:Button
+                visible="false"
                 icon="sap-icon://decline"
                 tooltip="Clear all filters and sortings"
                 press="clearAllFilters"/>
+        <!--<m:ToolbarSeparator/>-->
+        <!--<m:SearchField placeholder="Search customer's name, type, phone..." value="{ui>/globalFilter}" width="22rem"
+                       search="filterGlobally" selectOnFocus="false"/>-->
+
+        <!-- NEW -->
+        <m:Title text="{i18n>searchFilter}"/>
+        <m:SearchField id="customerName" app:mydataSearch="customerName" liveChange="handle_value_search_change" placeholder="Customer's name..." width="12rem"
+                       showSearchButton="false" selectOnFocus="false"/>
+        <m:SearchField id="customerType" app:mydataSearch="customerType" liveChange="handle_value_search_change" placeholder="Customer's type..." width="12rem"
+                       showSearchButton="false" selectOnFocus="false"/>
+        <m:SearchField id="customerPhone" app:mydataSearch="customerPhone" liveChange="handle_value_search_change" placeholder="Customer's phone..." width="12rem"
+                       showSearchButton="false" selectOnFocus="false"/>
+        <m:SearchField id="dateRecord" app:mydataSearch="dateRecord" liveChange="handle_value_search_change" placeholder="Date record..." width="10rem"
+                       showSearchButton="false" selectOnFocus="false"/>
+        <m:SearchField id="branchCall" app:mydataSearch="branchCall" liveChange="handle_value_search_change" placeholder="Brand call..." width="10rem"
+                       showSearchButton="false" selectOnFocus="false"/>
+        <m:ToolbarSpacer/>
         <m:ToolbarSeparator/>
-        <m:SearchField placeholder="Search customer's name, type, phone..." value="{ui>/globalFilter}" width="22rem"
-                       search="filterGlobally" selectOnFocus="false"/>
+        <m:Button
+                icon="sap-icon://clear-filter"
+                tooltip="Clear all filters and sortings"
+                text="Clear All"
+                press="clearAllFilterCollection"/>
+        <m:Button
+                icon="sap-icon://search"
+                tooltip="Search Result"
+                press="searchResult"/>
+
     </m:Toolbar>
 
     <m:Toolbar>
-        <m:CheckBox text="{i18n>dateFindTitle}" select="showFindDate" width="10.7rem"/>
-        <m:Text text="From" textAlign="Center"/>
+        <m:CheckBox visible="false" text="{i18n>dateFindTitle}" select="showFindDate" width="10.7rem"/>
+        <m:Text text="Date From" textAlign="Center"/>
         <m:DatePicker id="dateFrom" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem"
                       dateValue="{dateModel>/dateStart}"/>
-        <m:Text text="To" textAlign="Center"/>
+        <m:Text text="Date To" textAlign="Center"/>
         <m:DatePicker id="dateTo" displayFormat="short" enabled="{dateModel>/dateFind}" width="15rem"
                       dateValue="{dateModel>/dateEnd}"/>
         <m:Button
+                visible="false"
                 enabled="{dateModel>/dateFind}"
                 icon="sap-icon://search"
                 tooltip="Search"
@@ -115,8 +165,12 @@
                             href="http://10.2.8.58:8181/voice_mail/{path_file_record}"/>-->
                     <m:HBox>
                         <c:HTML
+                                app:mydata="{id}" app:mydataName="{customerName}"
+                                app:mydataDate="{dateRecord}"
+                                app:mydataLink="{host_model>/host_address}/{path_file_record}"
+                                afterRendering="handleAudioPlayer"
                                 content='&lt;div class=&quot;content&quot;&gt;
-                                &lt;audio controls&gt;
+                                &lt;audio controls id="audio_{id}"&gt;
                                     &lt;source src="{host_model>/host_address}/{path_file_record}" type="audio/wav"&gt;
                                     Your browser does not support the audio element.
                                 &lt;/audio&gt;
@@ -124,62 +178,53 @@
                         </c:HTML>
                         <m:Button
                                 class="sapUiSmallMarginBegin" icon="sap-icon://download"
-                                app:mydataDownloadName="{customer_name} -- {date_record}"
-                                app:mydataDownloadLink="{host_model>/host_address}/{path_file_record}" press="downloadAudio"/>
+                                app:mydataDownloadName="{customerName} -- {daterecord}"
+                                app:mydataDownloadLink="{host_model>/host_address}/{path_file_record}"
+                                press="downloadAudio"/>
                     </m:HBox>
 
                 </template>
             </Column>
             <Column
-                    sortProperty="customer_name"
-                    filterProperty="customer_name"
                     minScreenWidth="Tablet"
                     demandPopin="true">
                 <m:Label text="Cus. Name"/>
                 <template>
-                    <m:Text text="{customer_name}" wrapping="false"/>
+                    <m:Text text="{customerName}" wrapping="false"/>
                 </template>
             </Column>
             <Column
-                    sortProperty="customer_type"
-                    filterProperty="customer_type"
                     minScreenWidth="Tablet"
                     demandPopin="true">
                 <m:Label text="Cus. Type"/>
                 <template>
-                    <m:Text text="{customer_type}" wrapping="false"/>
+                    <m:Text text="{customerType}" wrapping="false"/>
                 </template>
             </Column>
             <Column
                     id="phone"
-                    sortProperty="customer_phone"
-                    filterProperty="customer_phone"
                     hAlign="Center"
                     minScreenWidth="Tablet"
                     demandPopin="true">
                 <m:Label text="Cus. Phone"/>
                 <template>
-                    <m:Text text="{customer_phone}" wrapping="false"/>
+                    <m:Text text="{customerPhone}" wrapping="false"/>
                 </template>
             </Column>
             <Column
-                    sortProperty="date_record"
-                    filterProperty="date_record"
                     minScreenWidth="Tablet"
                     demandPopin="true">
                 <m:Label text="Date Record"/>
                 <template>
-                    <m:Text text="{date_record}" wrapping="false"/>
+                    <m:Text text="{dateRecord}" wrapping="false"/>
                 </template>
             </Column>
             <Column
-                    sortProperty="branch_call"
-                    filterProperty="branch_call"
                     minScreenWidth="Tablet"
                     demandPopin="true">
                 <m:Label text="Brand Call"/>
                 <template>
-                    <m:Text text="{branch_call}" wrapping="false"/>
+                    <m:Text text="{branchCall}" wrapping="false"/>
                 </template>
             </Column>
             <Column
@@ -187,19 +232,17 @@
                     showFilterMenuEntry="false"
                     defaultFilterOperator="EQ"
                     filterType="sap.ui.model.type.Boolean"
-                    filterProperty="status_agent_seen"
+                    filterProperty="statusAgentSeen"
                     hAlign="Center"
                     width="5em"
                     demandPopin="true">
                 <m:Label text="Seen"/>
                 <template>
                     <!--<m:Text text="{voice>status_agent_seen}" wrapping="false"/>-->
-                    <m:CheckBox editable="false" selected="{= ${status_agent_seen} !== '0' }"/>
+                    <m:CheckBox editable="false" selected="{= ${statusAgentSeen} !== '0' }"/>
                 </template>
             </Column>
             <Column
-                    sortProperty="agent_note"
-                    filterProperty="agent_note"
                     width="10em"
                     demandPopin="true">
                 <m:Label text="Note"/>
@@ -207,7 +250,7 @@
                     <m:HBox>
                         <m:Input
                                 name="{id}"
-                                value="{agent_note}"
+                                value="{agentNote}"
                                 type="Text"/>
                         <m:Button
                                 icon="sap-icon://save"
@@ -221,5 +264,25 @@
         </columns>
     </Table>
 
+    <m:HBox class="sapUiSmallMarginTop" justifyContent="End">
+        <m:Button
+                class="sapUiSmallMarginEnd"
+                id="btnPrev"
+                icon="sap-icon://close-command-field"
+                tooltip="Previous"
+                press="prevPage"/>
+
+        <m:Button
+                class="sapUiSmallMarginEnd"
+                id="pageTextId"
+                text="Page 1"
+        />
+
+        <m:Button
+                id="btnNext"
+                icon="sap-icon://open-command-field"
+                tooltip="Next"
+                press="nextPage"/>
+    </m:HBox>
 
 </mvc:View>

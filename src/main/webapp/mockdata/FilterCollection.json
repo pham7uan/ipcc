@@ -1,0 +1,28 @@
+{
+  "FilterCollection" : [
+    {
+      "id": 0,
+      "name": "-- Select --"
+    },
+    {
+      "id": 1,
+      "name": "Customer Name"
+    },
+    {
+      "id": 2,
+      "name": "Customer Type"
+    },
+    {
+      "id": 3,
+      "name": "Customer Phone"
+    },
+    {
+      "id": 4,
+      "name": "Date Record"
+    },
+    {
+      "id": 5,
+      "name": "Brand Call"
+    }
+  ]
+}

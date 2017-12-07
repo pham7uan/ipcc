@@ -8,11 +8,11 @@
         </headerContent>
         <content>
             <VBox class="sapUiSmallMargin">
-                <!--<Button-->
-                        <!--width="100%"-->
-                        <!--text="Open Voice Mail List Page"-->
-                        <!--tooltip="VoiceList Page"-->
-                        <!--press="onOpenVoiceListPage"/>-->
+                <Button
+                        width="100%"
+                        text="Open Voice Mail List Page"
+                        tooltip="VoiceList Page"
+                        press="onOpenVoiceListPage"/>
                 <Button
                         width="100%"
                         text="Open Outbound Page"
