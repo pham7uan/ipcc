@@ -297,16 +297,20 @@ sap.ui.define([
                 }
             }
 
+            var seen;
+            if (mainModel[i].statusAgentSeen == "0")
+                seen = "1";
+            else
+                seen = "0";
             if (id != null) {
                 jQuery.ajax({
-                    url: HOST + "/api/voicemail/update?id=" + id + "&isSeen=1&note=''",
+                    url: HOST + "/api/voicemail/update?id=" + id + "&isSeen=" + seen + "&note=''",
                     success: function (oData) {
-                        // console.log(oData)
-                        mainModel[index].status_agent_seen = "1";
+                        mainModel[index].status_agent_seen = seen;
                         model.refresh();
 
                         // play media
-                        var oDialog1 = new Dialog({
+                        /*var oDialog1 = new Dialog({
                             closed: function () {
                                 oDialog1.destroy();
                             }
@@ -314,7 +318,7 @@ sap.ui.define([
                         oDialog1.setTitle(name + " [ " + date + " ] ");
                         oDialog1.addContent(new HTML("html_" + id, {content: "<iframe   src=" + link + "  width='400' height='300' ></iframe>"}));
                         //oDialog1.setModal(true);
-                        oDialog1.open();
+                        oDialog1.open();*/
                     },
 
                     error: function () {

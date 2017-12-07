@@ -168,7 +168,6 @@
                                 app:mydata="{id}" app:mydataName="{customerName}"
                                 app:mydataDate="{dateRecord}"
                                 app:mydataLink="{host_model>/host_address}/{path_file_record}"
-                                afterRendering="handleAudioPlayer"
                                 content='&lt;div class=&quot;content&quot;&gt;
                                 &lt;audio controls id="audio_{id}"&gt;
                                     &lt;source src="{host_model>/host_address}/{path_file_record}" type="audio/wav"&gt;
@@ -239,7 +238,12 @@
                 <m:Label text="Seen"/>
                 <template>
                     <!--<m:Text text="{voice>status_agent_seen}" wrapping="false"/>-->
-                    <m:CheckBox editable="false" selected="{= ${statusAgentSeen} !== '0' }"/>
+                    <m:CheckBox
+                            app:mydata="{id}" app:mydataName="{customerName}"
+                            app:mydataDate="{dateRecord}"
+                            app:mydataLink="{host_model>/host_address}/{path_file_record}"
+                            select="clickLink"
+                            selected="{= ${statusAgentSeen} !== '0' }"/>
                 </template>
             </Column>
             <Column
