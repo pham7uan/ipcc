@@ -85,7 +85,7 @@ public class VoiceMailController {
     @CrossOrigin
     @GetMapping(path = "/all")
     @ResponseBody
-    public List<VoiceMail> search(@RequestParam(value = "search") String search) {
+    public List<VoiceMail> search(@RequestParam(value = "page") int page,@RequestParam(value = "search") String search) {
 //        System.out.println(search);
         SpecificationsBuilder builder = new SpecificationsBuilder();
 //        Pattern pattern = Pattern.compile(" (\\w+?)(:|<|>)(a-zA-Z0-9\\-)*,");
@@ -109,7 +109,8 @@ public class VoiceMailController {
 
         }
         Specification<VoiceMail> spec = builder.build();
-        return voiceMailRepository.findAll(spec);
+//        return voiceMailRepository.findAll(spec);
+        return Util.PaginationList(voiceMailRepository.findAll(spec),page);
     }
 
     @CrossOrigin
