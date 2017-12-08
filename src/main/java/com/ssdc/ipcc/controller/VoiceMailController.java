@@ -45,10 +45,16 @@ public class VoiceMailController {
         builder.with("id", ":", id);
         Specification<VoiceMail> spec = builder.build();
         VoiceMail voiceMail = voiceMailRepository.findOne(spec);
-        if (isSeen.equals("1")) {
-            voiceMail.setStatusAgentSeen("1");
-            voiceMail.setAgent_seen_time(Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss"));
+        if (!isSeen.isEmpty() && isSeen !=null){
+            if (isSeen.equals("1")) {
+                voiceMail.setStatusAgentSeen("1");
+                voiceMail.setAgent_seen_time(Util.getCurrentDateTime("yyyy-MM-dd HH:mm:ss"));
+            } else if(isSeen.equals("0")){
+                voiceMail.setStatusAgentSeen("0");
+                voiceMail.setAgent_seen_time(null);
+            }
         }
+
         if (!note.isEmpty() && !note.equals("")) {
             voiceMail.setAgentNote(note);
         }

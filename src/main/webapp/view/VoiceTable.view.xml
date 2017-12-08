@@ -25,13 +25,13 @@
                 <VBox class="sapUiSmallMarginBegin sapUiSmallMarginTopBottom">
                     <Link text="{voice>customer_name}"
                           target="_blank"
-                          href="http://10.2.8.58:8181/voice_mail/{voice>path_file_record}"/>
+                          href="http://10.2.8.58:8181/voice_mail/{voice>pathFileRecord}"/>
                     <Label text="{voice>customer_phone}"/>
                 </VBox>
 
             </HBox>
             &lt;!&ndash;<html:audio controls="controls">
-                <html:source src="http://10.2.8.58:8181/voice_mail/{voice>path_file_record}" type="audio/wav"/>
+                <html:source src="http://10.2.8.58:8181/voice_mail/{voice>pathFileRecord}" type="audio/wav"/>
                 Your browser does not support the audio element.
             </html:audio>&ndash;&gt;
         </CustomListItem>
@@ -158,19 +158,19 @@
                 <template>
                     <!--<m:Button icon="sap-icon://media-play" app:mydata="{id}" app:mydataName="{customer_name}"
                               app:mydataDate="{date_record}"
-                              app:mydataLink="{host_model>/host_address}/{path_file_record}" press="clickLink"/>-->
+                              app:mydataLink="{host_model>/host_address}/{pathFileRecord}" press="clickLink"/>-->
                     <!--<m:Link text="Play"
                             target="_blank"
                             app:mydata="{id}" press="clickLink"
-                            href="http://10.2.8.58:8181/voice_mail/{path_file_record}"/>-->
+                            href="http://10.2.8.58:8181/voice_mail/{pathFileRecord}"/>-->
                     <m:HBox>
                         <c:HTML
                                 app:mydata="{id}" app:mydataName="{customerName}"
                                 app:mydataDate="{dateRecord}"
-                                app:mydataLink="{host_model>/host_address}/{path_file_record}"
+                                app:mydataLink="{host_model>/host_address}/{pathFileRecord}"
                                 content='&lt;div class=&quot;content&quot;&gt;
                                 &lt;audio controls id="audio_{id}"&gt;
-                                    &lt;source src="{host_model>/host_address}/{path_file_record}" type="audio/wav"&gt;
+                                    &lt;source src="{host_model>/host_address}/{pathFileRecord}" type="audio/wav"&gt;
                                     Your browser does not support the audio element.
                                 &lt;/audio&gt;
                             &lt;/div&gt;'>
@@ -178,7 +178,7 @@
                         <m:Button
                                 class="sapUiSmallMarginBegin" icon="sap-icon://download"
                                 app:mydataDownloadName="{customerName} -- {daterecord}"
-                                app:mydataDownloadLink="{host_model>/host_address}/{path_file_record}"
+                                app:mydataDownloadLink="{host_model>/host_address}/{pathFileRecord}"
                                 press="downloadAudio"/>
                     </m:HBox>
 
@@ -241,7 +241,7 @@
                     <m:CheckBox
                             app:mydata="{id}" app:mydataName="{customerName}"
                             app:mydataDate="{dateRecord}"
-                            app:mydataLink="{host_model>/host_address}/{path_file_record}"
+                            app:mydataLink="{host_model>/host_address}/{pathFileRecord}"
                             select="clickLink"
                             selected="{= ${statusAgentSeen} !== '0' }"/>
                 </template>

@@ -342,7 +342,7 @@ sap.ui.define([
                     text: 'OK',
                     press: function () {
                         jQuery.ajax({
-                            url: HOST + "/api/voicemail/update?id=" + id + "&isSeen=0&note=" + dataInput + "",
+                            url: HOST + "/api/voicemail/update?id=" + id + "&isSeen=&note=" + dataInput + "",
                             success: function (oData) {
                                 // console.log(oData)
                                 var dialog = new sap.m.Dialog({
